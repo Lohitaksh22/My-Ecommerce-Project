@@ -37,10 +37,11 @@ const registerAccount = async (req, res) => {
 
 const loginAccount = async (req, res) => {
   try {
-    const { username, email, password } = req.body
-    if (!username || !email || !password) return res.status(401).json({ msg: "Invalid credentials" })
-
-    const foundAccount = await Account.findOne({ email })
+    const {email, password } = req.body
+    if (!email || !password) return res.status(401).json({ msg: "Invalid credentials" })
+     
+      
+    const foundAccount = await Account.findOne({ email }).select("+password")
     if (!foundAccount) return res.status(401).json({ msg: "Not a valid user" })
 
     const correctPassword = await foundAccount.comparePassword(password)
@@ -94,7 +95,7 @@ const logoutAccount = async (req, res) => {
     foundAccount.refreshToken = '';
     await foundAccount.save();
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false });
     res.status(204).json({ msg: "Successfully logged-out" })
   }
   catch (err) {
