@@ -2,9 +2,12 @@ import { api } from '../api'
 import { useEffect } from 'react'
 import { useAuth } from './AuthContext'
 import axios from 'axios'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const useInterceptors = () => {
   const { accessToken, setAccessToken } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
 
@@ -25,10 +28,16 @@ const useInterceptors = () => {
         const prevRequest = err?.config
         if (err?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
+          try{
           const res = await axios.post('http://localhost:3500/account/refresh', {}, { withCredentials: true });
           setAccessToken(res.data.accessToken);
           prevRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`;
           return api(prevRequest);
+          }catch(err){
+            console.error(err)
+            setAccessToken(null)
+            navigate('/login', {state: {from: location}} )
+          }
         }
         return Promise.reject(err)
       }

@@ -11,7 +11,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
-    const { accessToken, setAccessToken } = useAuth()
+    const { setAccessToken } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
