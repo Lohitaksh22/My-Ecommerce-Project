@@ -20,7 +20,7 @@ app.use(cookieParser())
 app.use(express.json());
 
 const cors = require('cors')
-app.use(cors({ origin: 'http://localhost:5174', credentials: true }))
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174'], credentials: true }))
 
 
 app.use('/account', accountRoutes)

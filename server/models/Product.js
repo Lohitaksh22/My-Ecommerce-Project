@@ -26,7 +26,9 @@ const productSchema = new schema({
     ref: "Category",
   },
 
-  images: [String],
+  image: {
+    type: String
+  },
 
     avgRating: {
     type: Number,

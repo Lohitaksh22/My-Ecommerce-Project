@@ -2,12 +2,16 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
+import { useAuth } from '../hooks/AuthContext'
 
-const Login = ({accessToken, setAccessToken}) => {
+const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+
+    const { accessToken, setAccessToken } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,12 +25,13 @@ const Login = ({accessToken, setAccessToken}) => {
       }, {
         withCredentials: true
       })
-      console.log(response?.data)
+      console.log(response?.data.accessToken)
       setAccessToken(response.data.accessToken)
       navigate('/home')
 
     } catch (err) {
-
+      console.log(err);
+      
       setError(err.response?.data?.msg || "Login Failed. Please Try again")
 
     } finally {
@@ -34,7 +39,7 @@ const Login = ({accessToken, setAccessToken}) => {
     }
   }
 
-  const navigate = useNavigate()
+  
   return (
     <div className='h-screen bg-linear-45 from-blue-400 to-purple-400 flex justify-center items-center'>
 

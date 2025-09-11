@@ -1,22 +1,22 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  let token = req.cookies?.jwt
-
-
-  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-    token = req.headers.authorization.split(' ')[1]
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ msg: "No access token, not authorized" });
   }
 
-  if (!token) return res.status(401).json({ msg: "No token, not authorized" })
+  const token = authHeader.split(" ")[1];
+  console.log("Access token received:", token);
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    req.user = decoded
-    next()
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    req.user = decoded; 
+    next();
   } catch (err) {
-    return res.status(403).json({ msg: "Token invalid or expired" })
+    console.error("JWT verification error:", err.message);
+    return res.status(401).json({ msg: "Access token invalid or expired" });
   }
-}
+};
 
-module.exports = verifyToken
+module.exports = verifyToken;

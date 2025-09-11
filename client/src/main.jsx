@@ -1,26 +1,15 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import { AuthProvider } from '../context/AuthContext.js'
-import api, {Interceptors} from "./api"
-import { useAuth } from '../context/AuthContext.js'
-import { useNavigate } from 'react-router-dom'
-import React from 'react'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./hooks/AuthContext";
 
-const InterceptorsSetUp = ({children}) => {
-  const {accessToken, setAccessToken} = useAuth()
-  const navigate = useNavigate()
-
-  React.useEffect(() => {
-    Interceptors(accessToken, setAccessToken, navigate)
-  }, [])
-  return children
-}
-
-createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <InterceptorsSetUp>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <AuthProvider>
+    <BrowserRouter>
       <App />
-    </InterceptorsSetUp>
-    
-  </AuthProvider>,
-)
+    </BrowserRouter>
+    </AuthProvider>
+  </React.StrictMode>
+);

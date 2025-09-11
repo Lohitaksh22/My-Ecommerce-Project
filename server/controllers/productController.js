@@ -75,4 +75,19 @@ const getAllCategories = async (req,res) => {
   }
 }
 
-module.exports = {getAllMatchingProducts, getProduct, getAllCategories}
+const getAllProductListing = async (req, res) => {
+  try {
+    const allProducts = await Product.find()
+    if (allProducts.length === 0) return res.status(400).json({ msg: "No Products Listed" })
+
+    res.status(200).json({
+      total: allProducts.length,
+      products: allProducts
+    })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(500)
+  }
+}
+
+module.exports = {getAllProductListing, getAllMatchingProducts, getProduct, getAllCategories}

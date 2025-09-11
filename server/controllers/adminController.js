@@ -103,7 +103,7 @@ const createProductListing = async (req, res) => {
 
     let product = { name, price, description }
 
-    if (req.body.images) product.images = req.body.images
+    if (req.body.image) product.image = req.body.image
 
     
     if (req.body.category) {
