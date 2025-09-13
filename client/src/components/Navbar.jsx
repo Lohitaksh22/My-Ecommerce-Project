@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <div className='flex bg-[#F5F5F5] shadow-xl px-8 py-4 fixed top-0 w-full justify-between items-center z-40 '>
 
-      <p onClick={() => navigate('/')} className='flex-none text-[25px] w-32 hover:text-blue-500 cursor-pointer font-bold' >
+      <p onClick={() => navigate('/home')} className='flex-none text-[25px] w-32 hover:text-blue-500 cursor-pointer font-bold' >
         MyShop
       </p>
 
