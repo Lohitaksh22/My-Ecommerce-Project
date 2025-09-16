@@ -66,7 +66,8 @@ const loginAccount = async (req, res) => {
     });
 
     
-
+    console.log(foundAccount);
+    
     res.status(202).json({ accessToken, username: foundAccount.username, lastLogin: foundAccount.lastLogin });
 
   } catch (err) {

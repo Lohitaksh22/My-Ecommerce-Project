@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { FaShoppingCart } from 'react-icons/fa'
 import { api } from '../api'
+import { useNavigate } from 'react-router-dom'
+
 
 const ProductCard = ({ _id, name, price, image }) => {
   const [quantity, setQuantity] = useState(1)
+  const navigate = useNavigate()
 
   const addToCart = async () => {
     try {
@@ -11,7 +14,7 @@ const ProductCard = ({ _id, name, price, image }) => {
         product: _id,
         newquantity: quantity
       })
-      console.log("Added to cart:", { name, quantity })
+      
     } catch (err) {
       console.log(err)
     }
@@ -19,10 +22,10 @@ const ProductCard = ({ _id, name, price, image }) => {
 
   return (
     <div className="flex flex-col items-center justify-center shadow-lg w-64 h-[400px] bg-gray-100 mb-10">
-      <img src={image} className="w-48 h-48 object-cover rounded-lg" alt={name} />
+      <img onClick={() => navigate(`/product/${_id}`)} src={image} className="w-48 h-48 object-cover rounded-lg active:translate-x-1 active:translate-y-1 active:shadow-inner" alt={name} />
 
       <div className="text-center mt-2">
-        <h2 className="text-lg font-semibold line-clamp-2">{name}</h2>
+        <h2 onClick={() => navigate(`/product/${_id}`)} className="text-lg font-semibold line-clamp-2">{name}</h2>
         <h2 className="text-gray-700 mt-1">${price}</h2>
       </div>
 

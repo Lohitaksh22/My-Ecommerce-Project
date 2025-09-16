@@ -1,9 +1,10 @@
-import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet} from "react-router-dom";
 import Home from './pages/Home';
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Product from "./pages/Product";
 import Navbar from "./components/Navbar";
 import './App.css';
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<Order />} />
+        <Route path="/product/:id" element={<Product />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/home" />} />

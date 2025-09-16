@@ -51,7 +51,7 @@ const getProduct = async (req, res) => {
     const productID = req.params.id
     if(!productID) return res.status(404).json({msg: "Please Enter Product ID"})
 
-    const product = await Product.findOne(productID).populate('category')
+    const product = await Product.findById(productID).populate('category')
     if(!product) return res.status(404).json({msg: "Product Not Found"})
     
     res.status(200).json(product)  
@@ -77,17 +77,37 @@ const getAllCategories = async (req,res) => {
 
 const getAllProductListing = async (req, res) => {
   try {
-    const allProducts = await Product.find()
-    if (allProducts.length === 0) return res.status(400).json({ msg: "No Products Listed" })
+    // Get the keyword from query and trim spaces
+    const keyword = (req.query.keyword || "").trim();
+    console.log("Keyword received in backend:", `"${keyword}"`); // 🔥 Debug
+
+    // Build filter only if keyword exists
+    let filter = {};
+    if (keyword) {
+      filter = { name: { $regex: keyword, $options: "i" } };
+      console.log("Filter applied:", filter); // 🔥 Debug
+    } else {
+      console.log("No keyword provided, returning all products"); // 🔥 Debug
+    }
+
+    // Query the database
+    const products = await Product.find(filter).populate('category');
+    console.log(`Products found: ${products.length}`); // 🔥 Debug
+    products.forEach(p => console.log(" -", p.name)); // 🔥 Debug
+
+    if (products.length === 0) {
+      return res.status(404).json({ msg: "Product Not Found" });
+    }
 
     res.status(200).json({
-      total: allProducts.length,
-      products: allProducts
-    })
+      total: products.length,
+      products,
+    });
   } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
+    console.error("Error in getAllProductListing:", err);
+    res.sendStatus(500);
   }
-}
+};
+
 
 module.exports = {getAllProductListing, getAllMatchingProducts, getProduct, getAllCategories}

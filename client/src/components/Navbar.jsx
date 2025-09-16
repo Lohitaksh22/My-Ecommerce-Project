@@ -2,8 +2,9 @@ import React from 'react'
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi"
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import FilterProducts from './FilterProducts'
 
 
 
@@ -11,6 +12,13 @@ const Navbar = () => {
   const [profileIsOpen, setProfileIsOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
+  const [query, setQuery] = useState("")
+
+  const handleSubmit = (e) => {
+    e?.preventDefault()
+    navigate(`/home?keyword=${encodeURIComponent(query.trim())}`)
+    
+  }
 
   const logOut = async(e) => {
     e.preventDefault()
@@ -31,8 +39,14 @@ const Navbar = () => {
       </p>
 
       <div className='hidden sm:flex items-center border-1 border-gray-300 rounded-lg px-2 py-2 flex-1 max-w-lg mx-4'>
-        <input type='text' placeholder='Search' className=' flex-1 outline-none px-2 '></input>
-        <FaSearch className=" hover:text-blue-500 text-[20px] cursor-pointer " size={20} />
+        <FilterProducts />
+        <input 
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if(e.key === "Enter")
+            handleSubmit(e)
+        }} type='text' placeholder='Search' className=' flex-1 outline-none px-2 '></input>
+        <FaSearch onClick={(e) => handleSubmit(e)} className=" hover:text-blue-500 text-[20px] cursor-pointer " size={20} />
       </div>
 
       <div className='hidden sm:flex items-center space-x-4 relative'>
@@ -65,16 +79,26 @@ const Navbar = () => {
         </button>
 
         {isOpen &&
-          <div className='sm:hidden bg-[#F5F5F5] px-4 py-4 flex flex-col space-y-3 shadow-2xl'>
-            <input
-              type='text'
-              placeholder='Search'
-              className='flex-1 outline-none px-2 py-1 border border-gray-300 rounded-lg'
-            />
-            <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/orders')}>Profile</p>
-            <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/cart')}>Cart</p>
-          </div>
-        }
+  <div className='sm:hidden bg-[#F5F5F5] px-4 py-4 flex flex-col space-y-3 shadow-2xl'>
+    <input
+      type='text'
+      placeholder='Search'
+      className='flex-1 outline-none px-2 py-1 border border-gray-300 rounded-lg'
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") handleSubmit(e);
+      }}
+    />
+    <FaSearch
+      onClick={(e) => handleSubmit(e)}
+      className="hover:text-blue-500 text-[20px] cursor-pointer mt-2"
+      size={20}
+    />
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/orders')}>Profile</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/cart')}>Cart</p>
+  </div>
+}
 
 
 
