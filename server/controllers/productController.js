@@ -5,10 +5,9 @@ const Category = require('../models/Category')
 const getAllMatchingProducts = async (req, res) => {
   try{
     const keyword = req.query.keyword || ""
-    const category = req.query.category || null
+    const categoryName = req.query.category || null
     const priceMin = req.query.min || 0
     const priceMax= req.query.max || Number.MAX_SAFE_INTEGER
-    const minRating = req.body.stars || 0
     const sortOption = req.query.sort || ""
 
    let sort = {}
@@ -18,10 +17,14 @@ const getAllMatchingProducts = async (req, res) => {
         {description: {$regex: keyword, $options:"i"}}],
 
         price: {$lte: priceMax, $gte: priceMin},
-        'avgRating': {$gte: minRating}
+        
     }
 
-    if(category) filter.category= category
+    if (categoryName) {
+      const cat = await Category.findOne({ name: categoryName });
+      if (cat) filter.category = cat._id
+      else filter.category = null
+    }
 
      if(sortOption === "priceAsc") sort = {price: 1}
      else if (sortOption === "priceDesc") sort = {price: -1}

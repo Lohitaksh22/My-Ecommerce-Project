@@ -7,22 +7,38 @@ const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const api = useInterceptors();
   const [searchParams] = useSearchParams()
-  const keyword = searchParams.get("keyword") || ""
-  console.log("Keyword in ProductGrid:", keyword);
+
+  
+  const keyword = searchParams.get("keyword")
+  const category = searchParams.get("category")
+  const priceMin = searchParams.get("priceMin")
+  const priceMax = searchParams.get("priceMax")
+  const sort = searchParams.get("sort")
+
+
 
   useEffect(() => {
     const getAllProducts = async () => {
       try {
-        const all = await api.get(`/products/all?keyword=${encodeURIComponent(keyword)}`)
-        setProducts(all.data.products)
-        
+
+        const params = {};
+
+        if (keyword) params.keyword = keyword;
+        if (category) params.category = category;
+        if (priceMin) params.min = priceMin;
+        if (priceMax) params.max = priceMax;
+        if (sort) params.sort = sort;
+
+        const all = await api.get(`/products/searchList`, { params })
+        setProducts(Array.isArray(all.data) ? all.data : [])
+
       } catch (err) {
-        console.error("Error fetching products:", err)
+        console.error(err)
       }
     }
 
     getAllProducts();
-  }, [api, keyword])
+  }, [api, keyword, category, priceMin, priceMax, sort])
 
   return (
     <div className='min-h-screen bg-gray-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-8 mt-12'>

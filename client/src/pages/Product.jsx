@@ -71,6 +71,15 @@ const Product = () => {
         rating: rating
       })
       setReviews(prev => [...prev, res.data])
+
+      const newNumReviews = product.numReviews + 1
+      const newAvgRating = ((product.avgRating * product.numReviews) + rating) / newNumReviews
+      
+      setProduct(prev => ({
+        ...prev,
+        numReviews: newNumReviews,
+        avgRating: newAvgRating
+      }))
       setIsOpen(false)
       setReview("")
       setRating(0)
@@ -242,12 +251,12 @@ const Product = () => {
                             setReview(e.target.value)
                           }} type="text" placeholder="Enter Review" className="w-full px-3 py-2 rounded-border mb-10"></input>
 
-                          <input 
-                          type="number" 
-                          min={1} 
-                          max={5}
-                          step={1} 
-                          onChange={e => setRating(Math.max(1, Math.floor(Number(e.target.value))))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
+                          <input
+                            type="number"
+                            min={1}
+                            max={5}
+                            step={1}
+                            onChange={e => setRating(Math.max(1, Math.floor(Number(e.target.value))))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
                           <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95" onClick={() => {
                             editAReview()
                             updateReview(r._id)
