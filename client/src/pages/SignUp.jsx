@@ -24,13 +24,24 @@ const SignUp = () => {
       })
 
       console.log(res.data)
-      navigate("/login") 
+      navigate("/login")
     } catch (err) {
       console.error(err.response?.data)
       setError(err.response?.data?.msg || "Signup failed. Try again.")
     } finally {
       setLoading(false)
     }
+  }
+
+  const validPassword = (password) => {
+    if (!password) return false
+    const minLength = password.length >= 8
+    const hasNumber = /\d/.test(password)
+    const hasUpper = /[A-Z]/.test(password)
+    const hasLower = /[a-z]/.test(password)
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+    return minLength && hasNumber && hasUpper && hasLower && hasSpecial
   }
 
   return (
@@ -68,15 +79,32 @@ const SignUp = () => {
           className="outline-none border border-green-500 rounded px-4 py-2 w-full focus:ring-2 focus:ring-green-400 transition duration-300"
         />
 
+        {validPassword(password) ?
+
+          (
+            <button
+              type="submit"
+              disabled={loading}
+              className="mb-2 shadow-lg mt-4 bg-green-700 rounded px-16 py-2 text-white text-lg transform transition duration-300 hover:scale-105 hover:bg-green-500 cursor-pointer focus:outline-none focus:ring focus:ring-green-600 focus:ring-offset-1 active:bg-green-700"
+            >
+              {loading ? "Signing up..." : "Sign Up"}
+            </button>
+          )
+          :
+          <div className="text-sm font-bold text-red-500 leading-relaxed mt-2">
+            Password must include:
+            <ul className="list-disc list-inside text-red-500 text-sm font-semibold ">
+              <li className={password.length >= 8 ? "text-green-500" : "text-red-500"}>8+ characters{ }</li>
+              <li className={/[A-Z]/.test(password) && /[a-z]/.test(password) ? "text-green-500" : "text-red-500"}>Upper & lower case</li>
+              <li className={/[\d]/.test(password) ? "text-green-500" : "text-red-500"}>Number</li>
+              <li className={/[!@#$%^&*(),.?":{}|<>]/.test(password) ? "text-green-500" : "text-red-500"}>Special character</li>
+            </ul>
+          </div>
+        }
+
         {error && <p className="text-red-600">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mb-2 shadow-lg mt-4 bg-green-700 rounded px-16 py-2 text-white text-lg transform transition duration-300 hover:scale-105 hover:bg-green-500 cursor-pointer focus:outline-none focus:ring focus:ring-green-600 focus:ring-offset-1 active:bg-green-700"
-        >
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
+
       </form>
     </div>
   )

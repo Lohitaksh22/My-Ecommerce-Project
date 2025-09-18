@@ -36,7 +36,7 @@ const accountSchema = new Schema({
 
   lastLogin: {
     type: Date,
-    default: null
+    default: Date.now
   }
 
 

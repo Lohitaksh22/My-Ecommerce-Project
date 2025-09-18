@@ -41,6 +41,9 @@ const loginAccount = async (req, res) => {
     if (!correctPassword) return res.status(401).json({ msg: "Incorrect Password" });
 
 
+     foundAccount.lastLogin = new Date()
+     await foundAccount.save()
+     
     const accessToken = jwt.sign(
       { id: foundAccount._id, username: foundAccount.username },
       process.env.ACCESS_TOKEN_SECRET,
@@ -57,17 +60,17 @@ const loginAccount = async (req, res) => {
     foundAccount.refreshToken = refreshToken;
     await foundAccount.save();
 
-  
+
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      secure: false, 
+      secure: false,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000
     });
 
-    
+
     console.log(foundAccount);
-    
+
     res.status(202).json({ accessToken, username: foundAccount.username, lastLogin: foundAccount.lastLogin });
 
   } catch (err) {
@@ -129,13 +132,14 @@ const refreshAccount = async (req, res) => {
 
 const getSpecificAccount = async (req, res) => {
   try {
-    const email = req.user.email;
-    const foundAccount = await Account.findOne({ email });
+    const ID = req.user.id;
+    const foundAccount = await Account.findById(ID)
     if (!foundAccount) return res.status(404).json({ msg: "Account not found" });
 
     res.status(200).json({
       msg: "Found Account",
       username: foundAccount.username,
+      password: foundAccount.password,
       email: foundAccount.email,
       lastLogin: foundAccount.lastLogin
     });
@@ -148,8 +152,8 @@ const getSpecificAccount = async (req, res) => {
 
 const updateAccount = async (req, res) => {
   try {
-    const email = req.user.email;
-    const foundAccount = await Account.findOne({ email });
+    const ID = req.user.id
+    const foundAccount = await Account.findById(ID)
     if (!foundAccount) return res.status(404).json({ msg: "Account not found" });
 
     const { newUsername, newEmail, newPassword } = req.body;
@@ -176,10 +180,8 @@ const updateAccount = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
   try {
-    const { username, email } = req.user;
-    if (!username || !email) return res.status(400).json({ msg: "Invalid" });
-
-    const foundAccount = await Account.findOne({ username, email });
+    const ID = req.user.id
+    const foundAccount = await Account.findById(ID)
     if (!foundAccount) return res.status(404).json({ msg: "User not found" });
 
     await foundAccount.deleteOne();
@@ -188,7 +190,27 @@ const deleteAccount = async (req, res) => {
   } catch (err) {
     res.sendStatus(500);
   }
-};
+}
+
+const passwordCheck = async (req, res) => {
+  try {
+    const ID = req.user?.id
+    const foundAccount = await Account.findById(ID).select("+password")
+    if (!foundAccount) return res.status(404).json({ msg: "User not found" });
+
+    const password = req.body.password
+    if (!password) return res.status(404).json({ msg: "Incorrect Password" });
+    const isMatch = await foundAccount.comparePassword(password)
+    if (!isMatch) {
+      return res.status(401).json({ msg: "Incorrect Password" })
+    }
+
+    res.status(200).json({ msg: "Password Correct" })
+
+  } catch (err) {
+    res.sendStatus(500)
+  }
+}
 
 module.exports = {
   registerAccount,
@@ -197,5 +219,6 @@ module.exports = {
   refreshAccount,
   getSpecificAccount,
   updateAccount,
-  deleteAccount
+  deleteAccount,
+  passwordCheck
 };

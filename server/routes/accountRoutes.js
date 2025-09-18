@@ -11,6 +11,6 @@ router.post('/refresh', accountController.refreshAccount)
 router.get('/profile', verifyToken, accountController.getSpecificAccount)
 router.put('/profile', verifyToken, accountController.updateAccount)
 router.delete('/profile', verifyToken, accountController.deleteAccount)
+router.post('/password-check', verifyToken, accountController.passwordCheck )
 
-
-module.exports = router;
+module.exports = router

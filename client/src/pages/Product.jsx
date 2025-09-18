@@ -177,7 +177,7 @@ const Product = () => {
                 type="number"
                 min={1}
                 max={10}
-                placeholder="1"
+                placeholder="100"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, Math.floor(Number(e.target.value))))}
                 className="w-15 mt-6 rounded-2xl shadow-2xl px-4 border-1 border-gray-500"

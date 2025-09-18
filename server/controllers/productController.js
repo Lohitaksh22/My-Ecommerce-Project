@@ -77,24 +77,18 @@ const getAllCategories = async (req,res) => {
 
 const getAllProductListing = async (req, res) => {
   try {
-    // Get the keyword from query and trim spaces
+
     const keyword = (req.query.keyword || "").trim();
     console.log("Keyword received in backend:", `"${keyword}"`); // 🔥 Debug
 
-    // Build filter only if keyword exists
     let filter = {};
     if (keyword) {
       filter = { name: { $regex: keyword, $options: "i" } };
-      console.log("Filter applied:", filter); // 🔥 Debug
+      console.log("Filter applied:", filter); 
     } else {
       console.log("No keyword provided, returning all products"); // 🔥 Debug
     }
-
-    // Query the database
     const products = await Product.find(filter).populate('category');
-    console.log(`Products found: ${products.length}`); // 🔥 Debug
-    products.forEach(p => console.log(" -", p.name)); // 🔥 Debug
-
     if (products.length === 0) {
       return res.status(404).json({ msg: "Product Not Found" });
     }

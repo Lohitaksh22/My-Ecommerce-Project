@@ -5,6 +5,7 @@ import Order from "./pages/Order";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Product from "./pages/Product";
+import Account from "./pages/Account";
 import Navbar from "./components/Navbar";
 import './App.css';
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<Order />} />
+        <Route path="/account" element={<Account />} />
         <Route path="/product/:id" element={<Product />} />
       </Route>
 

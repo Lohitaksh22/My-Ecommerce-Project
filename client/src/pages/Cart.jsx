@@ -10,12 +10,15 @@ const Cart = () => {
   const api = useInterceptors()
   const [total, setTotal] = useState(0)
 
+
+
+
   const getCart = async () => {
     try {
       const cartProducts = await api.get('/cart/')
       setCart(cartProducts.data)
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
     }
   }
@@ -24,7 +27,7 @@ const Cart = () => {
       const res = await api.get("/cart/savelater")
       setSaveForLaterProducts(res.data)
     } catch (err) {
-      console.error(err);
+      console.error(err)
 
     }
   }
@@ -45,14 +48,14 @@ const Cart = () => {
       ))
       getTotal()
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
     }
   }
 
   const updateQuantity = async (_id, quantity) => {
     try {
-      await api.patch(`/cart/${_id}?set=${quantity}`);
+      await api.patch(`/cart/${_id}?set=${quantity}`)
 
       setCart(cart.map(item =>
         item._id === _id
@@ -61,9 +64,9 @@ const Cart = () => {
       ))
       getTotal()
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
 
   const getTotal = async () => {
@@ -181,9 +184,29 @@ const Cart = () => {
                   <span>Total:</span>
                   <span>${total}</span>
                 </div>
-                <button className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                  Proceed to Checkout
+
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await api.post("/create-checkout-session", {
+                        items: cart.map(item => ({
+                          name: item.name,
+                          price: item.price,
+                          quantity: item.quantity,
+                        }))
+                      })
+
+                      window.location.href = res.data.url
+                    } catch (err) {
+                      console.error(err)
+                    }
+                  }}
+                  className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                >
+                  Checkout with Stripe
                 </button>
+
+
               </div>
             </div>
           </div>
@@ -191,60 +214,60 @@ const Cart = () => {
       </div>
 
       <div className="max-w-5xl mx-auto p-6 mt-24">
-  <h2 className="text-2xl font-bold mb-6">Saved For Later</h2>
-  <div
-    onClick={() => clearSaved()}
-    className="ml-2 text-md font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80 active:scale-95 transition duration-300"
-  >
-    Clear Saved List
-  </div>
+        <h2 className="text-2xl font-bold mb-6">Saved For Later</h2>
+        <div
+          onClick={() => clearSaved()}
+          className="ml-2 text-md font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80 active:scale-95 transition duration-300"
+        >
+          Clear Saved List
+        </div>
 
-  {saveForLaterProducts.length === 0 ? (
-    <p className="text-gray-500 flex justify-center">No products saved</p>
-  ) : (
-    <div className="flex flex-col space-y-6">
-      {saveForLaterProducts.map((item) => {
-        const product = item.product;
-        if (!product) return null; // skip if product was deleted
+        {saveForLaterProducts.length === 0 ? (
+          <p className="text-gray-500 flex justify-center">No products saved</p>
+        ) : (
+          <div className="flex flex-col space-y-6">
+            {saveForLaterProducts.map((item) => {
+              const product = item.product
+              if (!product) return null
 
-        return (
-          <div
-            key={item._id}
-            className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl"
-          >
-            <div className="flex items-center space-x-8">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-20 h-20 object-cover rounded-full"
-              />
-              <p className="font-medium">{product.name}</p>
-            </div>
+              return (
+                <div
+                  key={item._id}
+                  className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl"
+                >
+                  <div className="flex items-center space-x-8">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded-full"
+                    />
+                    <p className="font-medium">{product.name}</p>
+                  </div>
 
-            <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-              <p className="font-semibold">${(product.price * item.quantity).toFixed(2)}</p>
-              
-              <button
-                onClick={() => removeSaved(item._id)}
-                className="text-red-500 hover:text-red-700 active:scale-75 transition duration-500"
-              >
-                <FaTrash />
-              </button>
+                  <div className="flex items-center space-x-4 mt-4 sm:mt-0">
+                    <p className="font-semibold">${(product.price * item.quantity).toFixed(2)}</p>
 
-              <button
-                onClick={() => addFromSaved(item._id)}
-                title="Move item back to Cart"
-                className="font-semibold hover:opacity-75 active:scale-75 transition duration-500 text-white bg-gradient-to-r from-green-500 via-blue-500 to-pink-500 rounded-full w-8 h-8 flex items-center justify-center text-lg"
-              >
-                +
-              </button>
-            </div>
+                    <button
+                      onClick={() => removeSaved(item._id)}
+                      className="text-red-500 hover:text-red-700 active:scale-75 transition duration-500"
+                    >
+                      <FaTrash />
+                    </button>
+
+                    <button
+                      onClick={() => addFromSaved(item._id)}
+                      title="Move item back to Cart"
+                      className="font-semibold hover:opacity-75 active:scale-75 transition duration-500 text-white bg-gradient-to-r from-green-500 via-blue-500 to-pink-500 rounded-full w-8 h-8 flex items-center justify-center text-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        );
-      })}
-    </div>
-  )}
-</div>
+        )}
+      </div>
 
     </div>
   )
