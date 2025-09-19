@@ -7,7 +7,7 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("Access token received:", token);
+  
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

@@ -2,27 +2,40 @@ const Order = require('../models/Order')
 const cartService = require('../services/cartService')
 const { default: mongoose } = require('mongoose');
 const { v4: uuidv4 } = require('uuid')
+const Stripe = require('stripe')
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+
 
 const createOrder = async (req, res) => {
   try {
+
+    const { sessionId, shippingAddress } = req.body
+    if (!sessionId) return res.status(400).json({ msg: "No Stripe Session ID" })
+
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {expand: ['shipping'] })
+    if (session.payment_status !== "paid") {
+      return res.status(400).json({ msg: "Payment not completed" })
+    }
+
     const userId = req.user.id
     if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).json({ msg: "Invalid User Id" })
 
     const Cart = await cartService.getCart(userId)
     if (!Cart) return res.status(404).json({ msg: "No Cart Found" })
 
-    const { shippingAddress, paymentMethod } = req.body
     const orderProducts = cartService.mapProductsForOrder(Cart);
     const totalPrice = cartService.total(Cart)
 
     const deliveryMapping = {
-      oneDay: Date.now() + 1 * 24 * 60 * 60 * 1000,
-      twoDay: Date.now() + 2 * 24 * 60 * 60 * 1000,
-      fiveDay: Date.now() + 5 * 24 * 60 * 60 * 1000
+      oneDay: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      twoDay: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      fiveDay: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
     }
 
     const deliveryTime = deliveryMapping[req.body.deliveryTime] || deliveryMapping.oneDay;
-
+ 
+    
 
 
     const newOrder = await Order.create({
@@ -30,12 +43,13 @@ const createOrder = async (req, res) => {
       user: userId,
       shippingAddress: shippingAddress,
       deliveryTime: deliveryTime,
-      paymentMethod: paymentMethod,
+      paymentMethod: session.payment_method_types,
       price: totalPrice,
-      trackingNumber: "ORD-" + uuidv4()
+      trackingNumber: "ORD-" + uuidv4(),
+      paymentStatus: session.payment_status
     })
 
-    await cartService.clearCart(Cart)
+    await cartService.clearCart(Cart._id);
 
     res.status(200).json({
       msg: 'Order Created',
@@ -108,8 +122,14 @@ const updateOrder = async (req, res) => {
       return res.status(403).json({ msg: "Not authorized to view this order" });
     }
 
-    foundOrder.paymentStatus = foundOrder.paymentStatus === "pending" ? "paid" : "failed";
-    
+    if (req.body.paymentStatus) {
+      foundOrder.paymentStatus = req.body.paymentStatus;
+    }
+    if (req.body.orderStatus) {
+      foundOrder.orderStatus = req.body.orderStatus;
+    }
+
+
 
     await foundOrder.save()
     res.status(200).json({ msg: "Order Updated", order: foundOrder })
@@ -121,9 +141,9 @@ const updateOrder = async (req, res) => {
   }
 }
 
-const cancelOrder = async (req,res) => {
-  try{
-   const orderId = req.params.id
+const cancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id
     if (!mongoose.Types.ObjectId.isValid(orderId)) return res.status(404).json({ msg: "Invalid Order Id" })
 
     const foundOrder = await Order.findById(orderId).populate('user', 'username email')
@@ -136,13 +156,13 @@ const cancelOrder = async (req,res) => {
     if (['shipped', 'delivered'].includes(foundOrder.orderStatus)) {
       return res.status(400).json({ msg: "Cannot cancel shipped or delivered orders" });
     }
-    
-     foundOrder.orderStatus = 'canceled'
-     foundOrder.paymentMethod = 'refunded'
 
-     await foundOrder.save()
+    foundOrder.orderStatus = 'canceled'
+    foundOrder.paymentStatus = 'refunded'
 
-     res.status(200).json({msg: "Order Canceled", order: foundOrder})
+    await foundOrder.save()
+
+    res.status(200).json({ msg: "Order Canceled", order: foundOrder })
 
   } catch (err) {
     console.error(err)

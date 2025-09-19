@@ -49,7 +49,7 @@ const ProductCard = ({ _id, name, price, image }) => {
 
         <button
           onClick={addToCart}
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer active:scale-95"
         >
           <FaShoppingCart /> Add
         </button>

@@ -4,12 +4,14 @@ import useInterceptors from "../hooks/useInterceptors"
 import { useEffect, useState } from "react"
 
 
+
 const Cart = () => {
   const { cart, setCart } = useCart()
   const [saveForLaterProducts, setSaveForLaterProducts] = useState([])
   const api = useInterceptors()
   const [total, setTotal] = useState(0)
-
+  const [deliveryTime, setDeliveryTime] = useState("oneDay")
+  const [shippingAddress, setShippingAddress] = useState("")
 
 
 
@@ -178,37 +180,71 @@ const Cart = () => {
               </div>
             ))}
 
-            <div className="flex justify-end mt-6">
-              <div className="bg-white p-6 rounded-lg shadow-xl w-full sm:w-1/3 flex flex-col space-y-4">
-                <div className="flex justify-between text-lg font-bold">
+            <div className="flex justify-center w-full mt-10 px-4 ">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-full sm:w-1/2 lg:w-1/3 flex flex-col space-y-4">
+                <div className="flex justify-between text-xl font-extrabold border-b p-4">
                   <span>Total:</span>
                   <span>${total}</span>
+
                 </div>
 
-                <button
-                  onClick={async () => {
-                    try {
-                      const res = await api.post("/create-checkout-session", {
-                        items: cart.map(item => ({
-                          name: item.name,
-                          price: item.price,
-                          quantity: item.quantity,
-                        }))
-                      })
+                <div className="flex flex-col space-y-3">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input  onChange={() => setDeliveryTime("oneDay")} className="mr-2" type="radio" name="shipping" value="oneDay" defaultChecked />
+                    One Day Shipping
+                  </label>
 
-                      window.location.href = res.data.url
-                    } catch (err) {
-                      console.error(err)
-                    }
-                  }}
-                  className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Checkout with Stripe
-                </button>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input onChange={() => setDeliveryTime("twoDay")} className="mr-2" type="radio" name="shipping" value="twoDay" />
+                    Two Day Shipping
+                  </label>
+
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input onChange={() => setDeliveryTime("fiveDay")} className="mr-2" type="radio" name="shipping" value="fiveDay" />
+                    Five Day Shipping
+                  </label>
+
+
+                </div>
+                <div className="flex flex-col">
+                  <label className="font-semibold mb-2">Shipping Address:</label>
+                  <input
+                    onChange={(e) => { setShippingAddress(e.target.value) }}
+                    className="w-full px-3 py-2  border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300" type="text" placeholder="Enter Shipping Address"></input>
+                </div>
+                {shippingAddress === "" ?
+                  <p className="font-bold whitespace-nowrap text-xs text-red-500 hover:opacity-75 text-center ">Must Enter Shipping Address To Checkout</p>
+                  :
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await api.post("/create-checkout-session", {
+                          items: cart.map(item => ({
+                            name: item.name,
+                            price: item.price,
+                            quantity: item.quantity,
+                          })),
+                          shippingAddress,
+                          deliveryTime
+                        })
+
+                        window.location.href = res.data.url
+                      } catch (err) {
+                        console.error(err)
+                      }
+                    }}
+                    className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                  >
+                    Checkout with Stripe
+                  </button>
+                }
+
 
 
               </div>
             </div>
+
+
           </div>
         )}
       </div>

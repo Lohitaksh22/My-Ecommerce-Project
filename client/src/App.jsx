@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Product from "./pages/Product";
 import Account from "./pages/Account";
+import Success from "./pages/Success";
 import Navbar from "./components/Navbar";
 import './App.css';
 
@@ -38,6 +39,8 @@ function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/product/:id" element={<Product />} />
       </Route>
+
+      <Route path="/success" element={<Success />}></Route>
 
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>

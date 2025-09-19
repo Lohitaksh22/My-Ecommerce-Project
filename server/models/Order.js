@@ -18,7 +18,8 @@ const orderSchema = new Schema({
   },
   shippingAddress: {
     type: String,
-    required: true
+    required: true,
+    default: "No Address Provided"
   },
   deliveryTime: Date,
   price: {
@@ -27,16 +28,15 @@ const orderSchema = new Schema({
     min: 0
   },
   paymentMethod: {
-    type: String,
+    type: Array,
     required: true,
-    enum: ["card"],
-    default: "card" 
+    default: ["card"] 
   },
   paymentStatus: {
     type: String,
     required: true,
-    enum: ["pending", "paid", "failed", "refunded"],
-    default: "pending"
+    enum: ["unpaid", "paid", "failed", "refunded"],
+    default: "unpaid"
   },
   orderStatus: {
     type: String,

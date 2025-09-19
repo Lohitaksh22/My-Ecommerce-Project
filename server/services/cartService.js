@@ -14,8 +14,7 @@ const total = (cart) => {
 }
 
 const clearCart = async (cart) => {
-  cart.products = []
-  await cart.save()
+  await Cart.findByIdAndUpdate(cart._id, { $set: { products: [] } })
 }
 
 const mapProductsForOrder = (cart) => {

@@ -80,7 +80,7 @@ const FilterProducts = () => {
           onChange={(e) => {
             const value = parseFloat(e.target.value).toFixed(2)
             setMinPrice(value)
-            navigate(`/home?priceMin=${value}&priceMax=${maxPrice}`)
+            navigate(`/home?priceMin=${value}`)
           }}
           className="px-2 py-1 w-full border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300"
         />
@@ -89,7 +89,7 @@ const FilterProducts = () => {
           onChange={(e) => {
             const value = parseFloat(e.target.value).toFixed(2)
             setMaxPrice(value)
-            navigate(`/home?priceMin=${minPrice}&priceMax=${value}`)
+            navigate(`/home?priceMin=${minPrice}`)
           }}
           className="px-2 py-1 w-full border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300"
         />

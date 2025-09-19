@@ -27,6 +27,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 app.post("/create-checkout-session", async (req, res) => {
   try {
+    const { items, shippingAddress, deliveryTime } = req.body
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -36,15 +37,37 @@ app.post("/create-checkout-session", async (req, res) => {
           product_data: {
             name: item.name,
           },
-          unit_amount: Math.round(item.price * 100), 
+          unit_amount: Math.round(item.price * 100),
         },
         quantity: item.quantity,
       })),
-      success_url: "http://localhost:5173/success", 
+
+      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:5173/cancel",
+      metadata: {
+        shippingAddress,
+        deliveryTime,
+      },
     })
 
     res.json({ url: session.url })
+  } catch (err) {
+    console.error(err)
+    res.status(500)
+  }
+})
+
+app.get("/checkout-session", async (req, res) => {
+  try {
+    const { sessionId } = req.query
+    if (!sessionId) {
+      return res.status(400).json({ msg: "Missing session Id" })
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
+  
+    res.json(session)
+    
   } catch (err) {
     console.error(err)
     res.status(500)

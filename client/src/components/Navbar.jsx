@@ -49,7 +49,7 @@ const Navbar = () => {
         <FaSearch onClick={(e) => handleSubmit(e)} className=" hover:text-blue-500 text-[20px] cursor-pointer " size={20} />
       </div>
 
-      <div className='hidden sm:flex items-center space-x-4 relative'>
+      <div className='hidden sm:flex items-center justify-center space-x-4 relative'>
         <div className="relative">
           <button onClick={() => setProfileIsOpen(!profileIsOpen)}>
             {profileIsOpen
@@ -95,7 +95,9 @@ const Navbar = () => {
       className="hover:text-blue-500 text-[20px] cursor-pointer mt-2"
       size={20}
     />
-    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/orders')}>Profile</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/account')}>Profile</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/orders')}>Orders</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={logOut}>LogOut</p>
     <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/cart')}>Cart</p>
   </div>
 }
