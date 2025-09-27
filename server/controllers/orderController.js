@@ -12,8 +12,15 @@ const createOrder = async (req, res) => {
     const { sessionId, shippingAddress } = req.body
     if (!sessionId) return res.status(400).json({ msg: "No Stripe Session ID" })
 
+    const existingOrder = await Order.findOne({ sessionId });
+    if (existingOrder) {
+      return res.status(200).json({
+        msg: "Order already exists",
+        Order: existingOrder
+      });
+    }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {expand: ['shipping'] })
+    const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['shipping'] })
     if (session.payment_status !== "paid") {
       return res.status(400).json({ msg: "Payment not completed" })
     }
@@ -34,8 +41,8 @@ const createOrder = async (req, res) => {
     }
 
     const deliveryTime = deliveryMapping[req.body.deliveryTime] || deliveryMapping.oneDay;
- 
-    
+
+
 
 
     const newOrder = await Order.create({
@@ -46,7 +53,8 @@ const createOrder = async (req, res) => {
       paymentMethod: session.payment_method_types,
       price: totalPrice,
       trackingNumber: "ORD-" + uuidv4(),
-      paymentStatus: session.payment_status
+      paymentStatus: session.payment_status,
+      sessionId: sessionId
     })
 
     await cartService.clearCart(Cart._id);
@@ -110,36 +118,7 @@ const getorderByUser = async (req, res) => {
 }
 
 
-const updateOrder = async (req, res) => {
-  try {
-    const orderId = req.params.id
-    if (!mongoose.Types.ObjectId.isValid(orderId)) return res.status(404).json({ msg: "Invalid Order Id" })
 
-    const foundOrder = await Order.findById(orderId).populate('user', 'username email')
-    if (!foundOrder) return res.status(404).json({ msg: "Order not Found" })
-
-    if (foundOrder.user._id.toString() !== req.user.id) {
-      return res.status(403).json({ msg: "Not authorized to view this order" });
-    }
-
-    if (req.body.paymentStatus) {
-      foundOrder.paymentStatus = req.body.paymentStatus;
-    }
-    if (req.body.orderStatus) {
-      foundOrder.orderStatus = req.body.orderStatus;
-    }
-
-
-
-    await foundOrder.save()
-    res.status(200).json({ msg: "Order Updated", order: foundOrder })
-
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
-
-  }
-}
 
 const cancelOrder = async (req, res) => {
   try {
@@ -171,11 +150,27 @@ const cancelOrder = async (req, res) => {
   }
 }
 
+const deleteOrder = async () => {
+  try{
+    const orderId = req.params.id
+    if (!mongoose.Types.ObjectId.isValid(orderId)) return res.status(404).json({ msg: "Invalid Order Id" })
+
+    const foundOrder = await Order.findByIdAndDelete(orderId)
+    if (!foundOrder) return res.status(404).json({ msg: "Order not Found" })
+
+   
+   res.status(200).json({msg: `${foundOrder} has been deleted`})
+
+  }catch(err){
+    console.error(err)
+    res.sendStatus(500)
+  }
+}
 
 module.exports = {
   createOrder,
   getOrderById,
   getorderByUser,
-  updateOrder,
-  cancelOrder
+  cancelOrder,
+  deleteOrder
 }

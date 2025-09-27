@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
+  sessionId: { type: String, unique: true },
   products: [
     {
       productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }, 

@@ -216,6 +216,7 @@ const Cart = () => {
                   <p className="font-bold whitespace-nowrap text-xs text-red-500 hover:opacity-75 text-center ">Must Enter Shipping Address To Checkout</p>
                   :
                   <button
+                  type="button"
                     onClick={async () => {
                       try {
                         const res = await api.post("/create-checkout-session", {
@@ -233,7 +234,7 @@ const Cart = () => {
                         console.error(err)
                       }
                     }}
-                    className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                    className="active:scale-95 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                   >
                     Checkout with Stripe
                   </button>
