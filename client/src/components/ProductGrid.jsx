@@ -41,7 +41,7 @@ const ProductGrid = () => {
   }, [api, keyword, category, priceMin, priceMax, sort])
 
   return (
-    <div className='min-h-screen bg-gray-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-8 mt-12'>
+    <div className='overflow-y-auto min-h-screen bg-gray-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-8 mt-12'>
       {products?.map((item) => (
         <ProductCard
           key={item._id}

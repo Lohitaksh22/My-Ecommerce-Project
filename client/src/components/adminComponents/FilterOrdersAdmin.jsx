@@ -1,36 +1,36 @@
 import { Filter } from "lucide-react"
 import { useState } from "react"
-import useInterceptors from "../hooks/useInterceptors"
 import { useNavigate } from "react-router-dom"
 
-const FilterProducts = () => {
+const FilterOrdersAdmin = () => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(Infinity)
-  const [category, setCategory] = useState("")
-  const categories = ["Bags", "Clothing", "Electronics", "Accessories", "Shoes"]
+  const orderStatus = ["processing", "shipped", "delivered", "canceled"]
+  const paymentStatus = ["unpaid", "paid", "failed", "refunded"]
 
-  const categoryChange = (value) => {
-    setCategory(value)
-    navigate(`/home?category=${value}`)
+  const orderChange = (value) => {
+    navigate(`/admin/Orders?orderStatus=${value}`)
+  }
+
+  const paymentChange = (value) => {
+    navigate(`/admin/Orders?paymentStatus=${value}`)
   }
 
   return (
     <div className="relative inline-block">
 
       <button onClick={() => setIsOpen(!isOpen)}>
-        <Filter size={22} className="hover:text-blue-500" />
+        <Filter size={22} className="hover:text-white" />
       </button>
 
 
       <div
-        className={` flex flex-col items-center justify-center space-y-4 w  absolute right-0 left-0 mt-3 w-80 bg-[#F5F5F5] px-6 py-4 flex flex-col justify-center shadow-xl rounded transform transition-all duration-300 ease-out
+        className={`z-50 flex flex-col items-center justify-center space-y-4 w  absolute right-0 left-0 mt-3 w-80 bg-[#F5F5F5] px-6 py-4 flex flex-col justify-center shadow-xl rounded transform transition-all duration-300 ease-out
           ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
       >
         <button
           onClick={() => {
-            navigate(`/home?sort=priceAsc`);
+            navigate(`/admin/Orders?sort=priceAsc`);
           }}
           className="text-sm hover:text-blue-500 font-semibold"
         >
@@ -39,39 +39,23 @@ const FilterProducts = () => {
         <button
           onClick={() => {
 
-            navigate(`/home?sort=priceDesc`)
+            navigate(`/admin/Orders?sort=priceDesc`)
 
           }}
           className="text-sm hover:text-blue-500 font-semibold">Price: High → Low</button>
 
+        
         <button
           onClick={() => {
 
-            navigate(`/home?sort=numberOfRatingsDesc`)
-
-          }}
-          className="text-sm hover:text-blue-500 font-semibold">Reviews:  High → Low</button>
-
-        <button
-          onClick={() => {
-
-            navigate(`/home?sort=numberOfRatingsAsc`)
-
-          }}
-          className="text-sm hover:text-blue-500 font-semibold">Reviews:  Low → High</button>
-
-
-        <button
-          onClick={() => {
-
-            navigate(`/home?sort=newest`)
+            navigate(`/admin/Orders?sort=newest`)
 
           }}
           className="text-sm hover:text-blue-500 font-semibold">Newest First</button>
         <button
           onClick={() => {
 
-            navigate(`/home?sort=oldest`)
+            navigate(`/admin/Orders?sort=oldest`)
 
           }}
           className="text-sm font-semibold hover:text-blue-500">Oldest First</button>
@@ -80,10 +64,10 @@ const FilterProducts = () => {
           onChange={(e) => {
             const value = parseFloat(e.target.value).toFixed(2)
             if(isNaN(value)){
-              navigate(`/home?priceMin=${0}`)
+              navigate(`/admin/Orders?priceMin=${0}`)
             }
             else{
-            navigate(`/home?priceMin=${value}`)
+            navigate(`/admin/Orders?priceMin=${value}`)
             }
             
           }}
@@ -94,23 +78,33 @@ const FilterProducts = () => {
           onChange={(e) => {
             const value = parseFloat(e.target.value).toFixed(2)
             if(value === 0 || isNaN(value)){
-              navigate(`/home?priceMax=${Infinity}`)
+              navigate(`/admin/Orders?priceMax=${Infinity}`)
             }
             else{
-            navigate(`/home?priceMax=${value}`)
+            navigate(`/admin/Orders?priceMax=${value}`)
             }
             
           }}
           className="px-2 py-1 w-full border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300"
         />
 
-        <select className="w-full px-4 py-1 rounded-lg" value={category}
-          onChange={(e) => categoryChange(e.target.value)}
+        <select className="w-full px-4 py-1 rounded-lg"
+          onChange={(e) => orderChange(e.target.value)}
         ><option value="" className="font-blue-500">
-            Select Category
+            Select Order Status
           </option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
+          {orderStatus.map((stat) => (
+            <option key={stat} value={stat}>{stat}</option>
+          ))}
+
+        </select>
+        <select className="w-full px-4 py-1 rounded-lg" 
+          onChange={(e) => paymentChange(e.target.value)}
+        ><option value="" className="font-blue-500">
+            Select Payment Status
+          </option>
+          {paymentStatus.map((stat) => (
+            <option key={stat} value={stat}>{stat}</option>
           ))}
 
         </select>
@@ -119,4 +113,4 @@ const FilterProducts = () => {
   )
 }
 
-export default FilterProducts
+export default FilterOrdersAdmin

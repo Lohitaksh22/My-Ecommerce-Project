@@ -84,7 +84,7 @@ const Order = () => {
 
             {order.products?.length > 0 ? (
               order.products.map(item => (
-                <div key={item.productId} className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl hover:scale-95">
+                <div key={item.productId} className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl hover:scale-99 transition-transform">
                   <div className="flex items-center space-x-8">
                     <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
                     <p className="font-medium">{item.name}</p>

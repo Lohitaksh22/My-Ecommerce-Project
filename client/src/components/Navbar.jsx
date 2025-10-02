@@ -51,7 +51,7 @@ const Navbar = () => {
 
       <div className='hidden sm:flex items-center justify-center space-x-4 relative'>
         <div className="relative">
-          <button onClick={() => setProfileIsOpen(!profileIsOpen)}>
+          <button onClick={() => setProfileIsOpen(!profileIsOpen)} >
             {profileIsOpen
               ? <HiOutlineX size={30} />
               : <FaUser  className="hover:text-blue-500 text-[25px] cursor-pointer" />}

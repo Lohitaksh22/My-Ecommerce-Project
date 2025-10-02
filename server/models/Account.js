@@ -24,10 +24,10 @@ const accountSchema = new Schema({
   },
 
   roles: {
-    User: {
-      type: [String],
-      default: ["User"]
-    }
+    
+      type: String,
+      enum: ['User', "Admin"],
+      default: "User"  
   },
 
   refreshToken: {

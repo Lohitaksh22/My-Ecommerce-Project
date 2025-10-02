@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useAuth } from '../hooks/AuthContext'
 
 const Login = () => {
+  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -21,13 +22,20 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:3500/account/login", {
         email,
-        password
+        password,
+        username
       }, {
         withCredentials: true
       })
       console.log(response?.data.accessToken)
       setAccessToken(response.data.accessToken)
+      if(response.data.roles === "Admin")
+      {
+        navigate('/admin')
+      }
+      else{
       navigate('/home')
+      }
 
     } catch (err) {
       console.log(err);
@@ -46,7 +54,7 @@ const Login = () => {
       <form onSubmit={handleSubmit} className='rounded flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md h-auto'>
         <p className='text-2xl font-bold my-6'>Welcome Back!</p>
 
-        <input type='text' placeholder='UserName' className='outline-none border border-blue-500 rounded px-4 py-2 w-19/20
+        <input type='text' onChange={(e) => { setUsername(e.target.value)}} placeholder='UserName' className='outline-none border border-blue-500 rounded px-4 py-2 w-19/20
            focus:ring-2 focus:ring-blue-400 transition duration-300'  />
         <input onChange={(e) => setEmail(e.target.value)} type='email' placeholder='Email' className='outline-none border border-blue-500 rounded px-4 py-2
           w-19/20 invalid:border-pink-500 invalid:text-pink-500 focus:invalid:ring-2 focus:invalid:ring-pink-500  focus:ring-2 focus:ring-blue-400 transition duration-300'/>

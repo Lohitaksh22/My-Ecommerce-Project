@@ -4,23 +4,24 @@ const jwt = require('jsonwebtoken');
 
 const registerAccount = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, admin } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !admin) {
       return res.status(400).json({ msg: 'All fields are required' });
     }
 
     const existingAccount = await Account.findOne({ email });
     if (existingAccount) return res.status(409).json({ msg: 'Email already in use' });
 
-    const account = await Account.create({ username, email, password });
+    const account = await Account.create({ username, email, password, roles: admin});
 
     res.status(201).json({
       msg: 'Account created successfully',
       account: {
         id: account._id,
         username: account.username,
-        email: account.email
+        email: account.email,
+        roles: admin
       }
     });
   } catch (err) {
@@ -31,10 +32,10 @@ const registerAccount = async (req, res) => {
 
 const loginAccount = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(401).json({ msg: "Invalid credentials" });
+    const {username, email, password } = req.body;
+    if (!username|| !email || !password) return res.status(401).json({ msg: "Invalid credentials" });
 
-    const foundAccount = await Account.findOne({ email }).select("+password");
+    const foundAccount = await Account.findOne({ email, username }).select("+password");
     if (!foundAccount) return res.status(401).json({ msg: "Not a valid user" });
 
     const correctPassword = await foundAccount.comparePassword(password);
@@ -45,14 +46,14 @@ const loginAccount = async (req, res) => {
      await foundAccount.save()
      
     const accessToken = jwt.sign(
-      { id: foundAccount._id, username: foundAccount.username },
+      { id: foundAccount._id,  role: foundAccount.roles , username: foundAccount.username },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: '15m' }
     );
 
 
     const refreshToken = jwt.sign(
-      { id: foundAccount._id, username: foundAccount.username },
+      { id: foundAccount._id,  role: foundAccount.roles , username: foundAccount.username },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '1d' }
     );
@@ -71,7 +72,7 @@ const loginAccount = async (req, res) => {
 
     console.log(foundAccount);
 
-    res.status(202).json({ accessToken, username: foundAccount.username, lastLogin: foundAccount.lastLogin });
+    res.status(202).json({ accessToken, username: foundAccount.username, lastLogin: foundAccount.lastLogin,  roles: foundAccount.roles });
 
   } catch (err) {
     res.status(500).json({ msg: "Server error", error: err });
@@ -118,7 +119,7 @@ const refreshAccount = async (req, res) => {
     if (!user) return res.sendStatus(403);
 
     const accessToken = jwt.sign(
-      { id: user._id, username: user.username },
+      { id: user._id, username: user.username, role: user.roles },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "15m" }
     );

@@ -82,15 +82,12 @@ const getAllProductListing = async (req, res) => {
   try {
 
     const keyword = (req.query.keyword || "").trim();
-    console.log("Keyword received in backend:", `"${keyword}"`); // 🔥 Debug
-
+    
     let filter = {};
     if (keyword) {
       filter = { name: { $regex: keyword, $options: "i" } };
-      console.log("Filter applied:", filter); 
-    } else {
-      console.log("No keyword provided, returning all products"); // 🔥 Debug
-    }
+      
+    } 
     const products = await Product.find(filter).populate('category');
     if (products.length === 0) {
       return res.status(404).json({ msg: "Product Not Found" });

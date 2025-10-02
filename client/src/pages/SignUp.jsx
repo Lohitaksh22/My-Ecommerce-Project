@@ -10,6 +10,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [role, setRole] = useState("User")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,6 +23,7 @@ const SignUp = () => {
         username,
         email,
         password,
+        admin: role
       })
 
       console.log(res.data)
@@ -31,6 +34,13 @@ const SignUp = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleAdmin = () => {
+    const newValue = !isAdmin
+    setIsAdmin(newValue)
+    setRole(newValue ? "Admin" : "User")
+
   }
 
   const validPassword = (password) => {
@@ -78,6 +88,19 @@ const SignUp = () => {
           required
           className="outline-none border border-green-500 rounded px-4 py-2 w-full focus:ring-2 focus:ring-green-400 transition duration-300"
         />
+
+        <p className='font-bold bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>Register as an Admin?</p>
+        <button
+        type="button"
+          onClick={() => handleAdmin()}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${isAdmin ? "bg-blue-600" : "bg-gray-300"
+            }`}
+        >
+          <span
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${isAdmin ? "translate-x-6" : "translate-x-1"
+              }`}
+          ></span>
+        </button>
 
         {validPassword(password) ?
 

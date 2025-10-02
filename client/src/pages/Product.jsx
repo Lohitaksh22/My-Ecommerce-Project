@@ -299,11 +299,21 @@ const Product = () => {
               setReview(e.target.value)
             }} type="text" placeholder="Enter Review" className="w-full px-3 py-2 rounded-border mb-10"></input>
 
-            <input type="number" min={1} max={5} onChange={e => setRating(Math.max(1, Number(e.target.value)))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
-            <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95" onClick={() => {
+            <input onKeyDown={(e) => {
+              if(e.key ==="Enter"){
+                 e.preventDefault()
+                addAReview()
+                addReview()
+              }
+            }
+            } type="number" min={1} max={5} onChange={e => setRating(Math.max(1, Number(e.target.value)))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
+            <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95" 
+            onClick={() => {
               addAReview()
               addReview()
-            }}>Add Review</button>
+            }}
+            
+            >Add Review</button>
           </div>
         </div>
         : <></>}

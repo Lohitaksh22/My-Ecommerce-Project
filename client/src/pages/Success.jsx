@@ -61,7 +61,7 @@ const Success = () => {
 
             <>
               <p className='font-bold cursor-pointer hover:opacity-80'> Tracking Number: {order.trackingNumber}</p>
-              <p className='font-bold bg-gradient-to-r from-green-500 via-blue-500 to-blue-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'> Paid Amount : ${order.price}</p>
+              <p className='font-bold bg-gradient-to-r from-green-500 via-blue-500 to-blue-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80 '> Paid Amount : ${order.price}</p>
               <p className='font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>Shipping to: {order.shippingAddress}</p>
               <p className='font-bold bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>
                 Delivery Time: {new Date(order.deliveryTime).toLocaleDateString()}
@@ -70,7 +70,7 @@ const Success = () => {
               <div className="flex flex-col space-y-6">
                 {order.products.length > 0 ? (
                   order.products.map(item => (
-                    <div key={item.productId} className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl hover:scale-95 cursor-pointer">
+                    <div key={item.productId} className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl hover:scale-95 transition-transform cursor-pointer">
                       <div className="flex items-center space-x-8">
                         <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
                         <p className="font-medium">{item.name}</p>
