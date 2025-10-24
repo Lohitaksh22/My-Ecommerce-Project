@@ -13,7 +13,8 @@ const AdminReviews = () => {
   const [sort, setSort] = useState("")
   const [stars, setStars] = useState(null)
   const [err, setErr] = useState("")
-  
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(null)
 
   useEffect(() => {
     setSort(searchParams.get("sort") || "")
@@ -26,11 +27,13 @@ const AdminReviews = () => {
         params: {
           keyword,
           sort,
-          stars
+          stars,
+          page
         }
       })
       setReviews(res.data.allReviews)
       setMsg(res.data.msg)
+      setTotalPages(res.data.pages)
       setErr("")
     } catch (err) {
       console.error(err)
@@ -40,14 +43,19 @@ const AdminReviews = () => {
   }
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
     getReviews()
-  }, [keyword, stars, sort])
+  }, [keyword, stars, sort, page])
 
   const handleKeyword = (value) => {
 
 
     setKeyword(value)
   }
+
+
+  const arr = Array.from({ length: totalPages })
+
   return (
     <div className="min-h-screen p-8 bg-gray-300">
       <div className="flex flex-col px-8 py-24">
@@ -61,7 +69,7 @@ const AdminReviews = () => {
             }}
           ></input>
         </div>
-       
+
 
         {(reviews.length > 0 && !err) ? (
           <div className="mt-8 space-y-4 w-full max-w-xl mx-auto">
@@ -82,6 +90,22 @@ const AdminReviews = () => {
           <p className="mt-30 mx-auto text-lg ">{err || "No Reviews Found"}</p>
         )}
 
+        {totalPages && (
+          <div className="flex justify-center space-x-2 mt-6">
+            {arr.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`p-2 rounded-md px-4 ${page === i + 1
+                  ? "bg-[#0A1A2F] text-white font-bold"
+                  : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

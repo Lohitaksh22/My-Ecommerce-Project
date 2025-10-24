@@ -9,6 +9,11 @@ const findAccount = async (req, res) => {
   try {
     const keyword = req.query.keyword || ""
     const sortOption = req.query.sort || ""
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 3
+    const skip = (page-1)*limit
+    const total = await Account.countDocuments()
+
 
     let sort = {}
 
@@ -25,13 +30,17 @@ const findAccount = async (req, res) => {
     else if (sortOption === "Admin") filter.roles = "Admin"
     else if (sortOption === "User") filter.sort = "User"
 
-    const foundAccounts = await Account.find(filter).sort(sort)
+    const foundAccounts = await Account.find(filter)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
     if (foundAccounts.length === 0) return res.status(404).json({ msg: "User(s) not found" })
 
     res.status(200).json({
       accounts: foundAccounts,
-      length: foundAccounts.length
-
+      length: foundAccounts.length,
+      page,
+      pages: Math.ceil(total/ limit)
     }
     )
 
@@ -179,6 +188,10 @@ const getAllMatchingProducts = async (req, res) => {
     const priceMin = req.query.min || 0
     const priceMax = req.query.max || Number.MAX_SAFE_INTEGER
     const sortOption = req.query.sort || ""
+    const limit = parseInt(req.query.limit) || 8
+    const page = parseInt(req.query.page) || 1
+    const skip = (page-1)*limit
+    const totalDoc = await Product.countDocuments()
 
     let sort = {}
 
@@ -205,12 +218,20 @@ const getAllMatchingProducts = async (req, res) => {
 
 
 
-    const allProducts = await Product.find(filter).populate('category').sort(sort)
+    const allProducts = await Product.find(filter)
+    .populate('category')
+    .sort(sort)
+    .limit(limit)
+    .skip(skip)
+
     if (allProducts.length === 0) return res.status(200).json({ msg: "No Products Listed" })
 
 
 
-    res.status(200).json(allProducts)
+    res.status(200).json({
+      products: allProducts,
+      pages: Math.ceil(totalDoc / limit)
+    })
 
   } catch (err) {
     console.log(err)
@@ -227,6 +248,11 @@ const getAllOrders = async (req, res) => {
     const priceMax = req.query.max || Number.MAX_SAFE_INTEGER
     const orderStatus = req.query.orderStatus || ""
     const paymentStatus = req.query.paymentStatus || ""
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 3
+    const skip = (page-1) * limit
+    const totalDoc = await Order.countDocuments()
+
     const filter = {
       price: { $lte: priceMax, $gte: priceMin },
 
@@ -256,13 +282,16 @@ const getAllOrders = async (req, res) => {
     if (filter.$or.length === 0) {
       delete filter.$or
     }
-    const allOrders = await Order.find(filter).populate("products user").sort(sort)
+    const allOrders = await Order.find(filter).populate("products user")
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
 
     if (allOrders.length === 0) return res.status(404).json({ msg: "No Orders Created" })
 
 
 
-    res.status(200).json({ msg: allOrders.length, allOrders: allOrders })
+    res.status(200).json({ msg: allOrders.length, allOrders: allOrders, pages: Math.ceil(totalDoc/ limit) })
 
   } catch (err) {
     console.error(err)
@@ -297,6 +326,10 @@ const getAllReviews = async (req, res) => {
     const sortOption = req.query.sort || ""
     const keyword = req.query.keyword || ""
     const stars = req.query.stars || null
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 3
+    const skip = (page-1) *limit
+    const totalDoc = await Review.countDocuments()
     const filter = {
       $or: [
         { review: { $regex: keyword, $options: "i" } },
@@ -328,10 +361,14 @@ const getAllReviews = async (req, res) => {
       .populate("user", "username")
       .populate("product", "name")
       .sort(sort)
+      .skip(skip)
+      .limit(limit)
 
     if (allReviews.length === 0) return res.status(404).json({ msg: "No reviews for any product" })
 
-    res.status(200).json({ msg: `${allReviews.length} Reviews Found`, allReviews })
+    res.status(200).json({ msg: `${allReviews.length} Reviews Found`, allReviews, 
+      pages: Math.ceil(totalDoc/ limit)
+    })
   } catch (err) {
     console.error(err)
     res.status(500)

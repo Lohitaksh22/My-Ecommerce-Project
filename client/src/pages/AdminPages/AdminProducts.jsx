@@ -23,6 +23,9 @@ const AdminProducts = () => {
   const [msg, setMsg] = useState("")
   const [err, setErr] = useState("")
   const [saveId, setSaveId] = useState(null)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(null)
+
 
 
 
@@ -38,17 +41,19 @@ const AdminProducts = () => {
   const getProducts = async () => {
 
     try {
-      const res = await api.get('/admin/allProductListings', {
+      const res = await api.get(`/admin/allProductListings`, {
         params: {
           keyword,
           min,
           max,
           sort,
-          category
+          category,
+          page
         }
       })
-      setProducts(res.data)
-      console.log(res.data);
+      setProducts(res.data.products)
+      setTotalPages(res.data.pages)
+
 
 
     } catch (err) {
@@ -57,9 +62,9 @@ const AdminProducts = () => {
     }
   }
   useEffect(() => {
-
+   window.scrollTo({ top: 0, behavior: "smooth" })
     getProducts()
-  }, [api, keyword, category, sort, min, max])
+  }, [api, keyword, category, sort, min, max, page])
 
 
 
@@ -99,7 +104,7 @@ const AdminProducts = () => {
     }
   }
 
-
+  const arr = Array.from({length: totalPages})
   return (
     <div className="min-h-screen bg-gray-300 p-8 ">
       <div className="mt-25 flex items-center gap-2 max-w-md w-full mx-auto">
@@ -172,6 +177,22 @@ const AdminProducts = () => {
           <button type="button" onClick={() => updateProduct(saveId)} className="px-8 py-2 mt-5 mx-auto hover:cursor-pointer active:scale-95 rounded bg-[#0A1A2F]  text-white w-50">Update</button>
         </div>
       </div>)}
+       {totalPages && (
+          <div className="flex justify-center space-x-2 mt-6">
+            {arr.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`p-2 rounded-md px-4 ${page === i + 1
+                    ? "bg-[#0A1A2F] text-white font-bold"
+                    : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
     </div>
   )
 }
