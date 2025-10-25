@@ -21,7 +21,7 @@ app.use(cookieParser())
 app.use(express.json())
 
 const cors = require('cors')
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174'], credentials: true }))
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174', 'https://my-ecommerce-project-react-1.onrender.com'], credentials: true }))
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -42,8 +42,8 @@ app.post("/create-checkout-session", async (req, res) => {
         quantity: item.quantity,
       })),
 
-      success_url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://my-ecommerce-project-react-1.onrender.com/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://my-ecommerce-project-react-1.onrender.com/cancel",
       metadata: {
         shippingAddress,
         deliveryTime,
