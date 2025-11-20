@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
+
 const SignUp = () => {
   const navigate = useNavigate()
 
@@ -19,7 +20,7 @@ const SignUp = () => {
     setLoading(true)
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/account/register`, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL ?? "http://localhost:5173"}/account/register`, {
         username,
         email,
         password,

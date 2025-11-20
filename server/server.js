@@ -21,7 +21,7 @@ app.use(cookieParser())
 app.use(express.json())
 
 const cors = require('cors')
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:5174', 'https://my-ecommerce-project-react-1.onrender.com'], credentials: true }))
+app.use(cors({ origin: ['http://localhost:5173', 'https://my-ecommerce-project-react-1.onrender.com'], credentials: true }))
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 

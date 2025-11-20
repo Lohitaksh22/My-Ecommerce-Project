@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '../hooks/AuthContext'
 
+
 const Login = () => {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
@@ -20,7 +21,7 @@ const Login = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post( `${import.meta.env.VITE_API_URL}/account/login`, {
+      const response = await axios.post( `${import.meta.env.VITE_API_URL ?? "http://localhost:5173"}/account/login`, {
         email,
         password,
         username
