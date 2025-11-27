@@ -57,11 +57,16 @@ const AdminReviews = () => {
   const arr = Array.from({ length: totalPages })
 
   return (
-    <div className="min-h-screen p-8 bg-gray-300">
-      <div className="flex flex-col px-8 py-24">
-        <div className="flex items-center gap-2 max-w-md w-full mx-auto">
+    <div className="min-h-screen bg-gray-300 p-4">
+      <div className="flex flex-col px-2 py-10 max-w-4xl mx-auto w-full">
+
+        <div className="mt-20 flex sm:flex-row items-center gap-3 w-full max-w-xl mx-auto mt-6">
           <FilterReviewsAdmin />
-          <input type="text" className="mx-8 flex-1 max-w-sm w-full border border-gray-400 hover::placeholder-text-white focus:ring-5 focus:ring-white transition duration-300 focus:bg-[#0A1A2F] focus:text-white  flex mx-auto px-4 py-2 rounded-2xl" placeholder={placeholder}
+          <input type="text" className="flex-1 w-full border border-gray-400 rounded-2xl px-4 py-3
+                   focus:ring-2 focus:ring-white focus:bg-[#0A1A2F] focus:text-white transition
+                   placeholder-gray-600"
+            placeholder={placeholder}
+
             onFocus={() => setPlaceholder("Type to search through accounts or products...")} onBlur={() => setPlaceholder("🔍 Search Reviews...")}
 
             onChange={(e) => {

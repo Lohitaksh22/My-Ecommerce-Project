@@ -75,7 +75,7 @@ const Admin = () => {
   const arr = Array.from({ length: totalPages || 0 })
 
   return (
-    <div className="min-h-screen bg-gray-300">
+    <div className="min-h-screen bg-gray-300 p-2">
       <div className="px-8 py-24">
         <div className="flex items-center gap-2 max-w-md w-full mt-8 mx-auto">
           <FilterAccountsAdmin />
@@ -93,26 +93,26 @@ const Admin = () => {
           <div className="mt-8 space-y-4 w-full max-w-xl mx-auto">
             {accountLength && (<p className="my-6 text-md">{accountLength} Accounts Found</p>)}
             {allAccounts?.map(account => (
-              <div key={account._id} className="flex items-center justify-between space-y-2 my-4 bg-white px-8 py-4 m-2 rounded-2xl shadow-2xl w-full  md:max-w-lg lg:max-w-xl mx-auto hover:scale-99 ">
+              <div key={account._id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 my-4 bg-white px-8 py-4 m-2 rounded-2xl shadow-2xl w-full  md:max-w-lg lg:max-w-xl mx-auto hover:scale-99 ">
 
-                <div className="flex flex-col space-y-2">
-                  <p className="font-semibold text-lg">UserName: {account.username}</p>
-                  <p className="text-sm font-semibold text-gray-500">Email: {account.email}</p>
+                <div className="flex-1 min-w-0 ">
+                  <p className="font-semibold text-lg truncate">UserName: {account.username}</p>
+                  <p className="text-sm font-semibold text-gray-500 truncate">Email: {account.email}</p>
                   <p className="text-sm font-semibold text-gray-500">Role: {account.roles || "User"}</p>
                   <p className="text-sm font-semibold text-gray-500">Last-Login: {new Date(account.lastLogin).toLocaleDateString()}</p>
 
                 </div>
 
-                <div className="ml-auto flex items-center space-x-4 ">
-                  <FaTrash title="Delete Account" onClick={() => { deleteAccount(account.username, account.email) }} className="text-red-500 hover:opacity-75 cursor-pointer " size={20} />
-                  <button title="Promote User To Admin" onClick={() => { promoteAccount(account.username, account.email) }} className="font-semibold hover:opacity-75 cursor-pointer  active:scale-75 transition duration-500 text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl px-3 py-1  text-sm items-center">Promote</button>
+                <div className="mt-3 mb-2 sm:mt-0 sm:ml-5 flex items-center gap-3">
+                  <FaTrash  title="Delete Account" onClick={() => { deleteAccount(account.username, account.email) }} className="text-red-500 hover:opacity-75 cursor-pointer  " size={20} />
+                  <button title="Promote User To Admin" onClick={() => { promoteAccount(account.username, account.email) }} className="font-semibold hover:opacity-75 cursor-pointer active:scale-75 transition duration-500 text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl px-3 py-1  text-sm items-center">Promote</button>
                 </div>
               </div>
             ))}
           </div>
         )}
         {totalPages && (
-          <div className="flex justify-center space-x-2 mt-6">
+          <div className="flex justify-center space-x-2 mt-8">
             {arr.map((_, i) => (
               <button
                 key={i}

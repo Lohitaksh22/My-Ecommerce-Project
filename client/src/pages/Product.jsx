@@ -74,7 +74,7 @@ const Product = () => {
 
       const newNumReviews = product.numReviews + 1
       const newAvgRating = ((product.avgRating * product.numReviews) + rating) / newNumReviews
-      
+
       setProduct(prev => ({
         ...prev,
         numReviews: newNumReviews,
@@ -149,23 +149,23 @@ const Product = () => {
 
 
   return (
-    <div className="mt-19 min-h-screen bg-gray-100 py-10 px-4">
+    <div className="mt-15 min-h-screen bg-gray-100 py-10 px-4">
       {product ? (
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:flex md:space-x-8 max-w-5xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 md:flex md:space-x-8 max-w-5xl mx-auto w-full">
 
 
           <div className="md:w-1/2 flex justify-center items-center">
             <img
-              className="w-100 max-w-md h-auto rounded-xl object-cover shadow-lg"
+              className="w-full max-w-xs md:max-w-md h-auto rounded-xl object-cover shadow-lg"
               src={product.image}
               alt={product.name}
             />
           </div>
 
 
-          <div className="md:w-1/2 mt-6 md:mt-0 flex flex-col justify-between">
+          <div className="md:w-1/2 mt-6 md:mt-0 flex flex-col justify-between w-full">
             <div>
-              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer">
+              <h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer truncate">
                 {product.name}
               </h1>
 
@@ -238,8 +238,8 @@ const Product = () => {
                     </button>
 
                     {editOpen ?
-                      <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
-                        <div className="z-50 rounded-xl flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md p-6">
+                      <div className="fixed inset-0 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
+                        <div className="relative z-50 rounded-xl flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md p-6 ">
                           <button
                             onClick={editAReview}
                             className="relative bottom-4 right-50 text-gray-600 hover:text-gray-800 text-xl font-bold"
@@ -256,8 +256,15 @@ const Product = () => {
                             min={1}
                             max={5}
                             step={1}
-                            onChange={e => setRating(Math.max(1, Math.floor(Number(e.target.value))))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
-                          <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95" onClick={() => {
+                            onChange={e => {
+                              let value = Number(e.target.value)
+                              if (value > 5) value = 5
+                              if (value < 1) value = 1
+
+                              e.target.value = value
+                              setRating(value);
+                            }} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
+                          <button className="bg-blue-500 text-black font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-2 hover:opacity-75 active:scale-95" onClick={() => {
                             editAReview()
                             updateReview(r._id)
                             window.location.reload()
@@ -300,19 +307,19 @@ const Product = () => {
             }} type="text" placeholder="Enter Review" className="w-full px-3 py-2 rounded-border mb-10"></input>
 
             <input onKeyDown={(e) => {
-              if(e.key ==="Enter"){
-                 e.preventDefault()
+              if (e.key === "Enter") {
+                e.preventDefault()
                 addAReview()
                 addReview()
               }
             }
             } type="number" min={1} max={5} onChange={e => setRating(Math.max(1, Number(e.target.value)))} placeholder="Enter Number of Stars" className="w-full px-3 py-2 rounded-border"></input>
-            <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95" 
-            onClick={() => {
-              addAReview()
-              addReview()
-            }}
-            
+            <button className="bg-blue-500 text-white font-semibold rounded-xl px-6 py-3 cursor-pointer shadow-xl mt-5 hover:opacity-75 active:scale-95"
+              onClick={() => {
+                addAReview()
+                addReview()
+              }}
+
             >Add Review</button>
           </div>
         </div>

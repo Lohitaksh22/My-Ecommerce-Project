@@ -1,71 +1,158 @@
+import React, { useState } from "react"
 import useInterceptors from "../../hooks/useInterceptors"
 import { useNavigate } from "react-router-dom"
-import { FaUser } from "react-icons/fa"
-import { useState } from "react"
-import { HiOutlineX } from "react-icons/hi"
-
-
+import { HiOutlineX, HiOutlineMenu } from "react-icons/hi"
 
 const AdminNavbar = () => {
   const api = useInterceptors()
-  const [profileIsOpen, setProfileIsOpen] = useState(false)
   const navigate = useNavigate()
-  const [productIsOpen, setProductIsOpen] = useState(false)
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [productIsOpen, setProductIsOpen] = useState(false) 
 
   const logOut = async () => {
     try {
       await api.post("http://localhost:3500/account/logout")
-      navigate('/login')
+      setIsOpen(false)
+      navigate("/login")
     } catch (err) {
       console.error(err)
     }
   }
 
+  const goTo = (path) => {
+    setIsOpen(false)
+    navigate(path)
+  }
+
   return (
-    <div className='flex space-x-4 bg-[#0A1A2F] text-white shadow-2xl px-8 py-4 fixed top-0 w-full min-h-20 justify-between items-center z-40 '>
-      <p onClick={() => navigate('/admin')} className="text-lg font-semibold cursor-pointer hover:opacity-75 active:scale-95">Accounts</p>
-
-      <div className="relative my-auto">
-        <button onClick={() => { setProductIsOpen(!productIsOpen) }}>
-          {productIsOpen
-            ? <HiOutlineX size={30} />
-            : <p className="text-lg font-semibold cursor-pointer hover:opacity-75 active:scale-95">Product Listings</p>
-}
-        </button>
-        <div
-          className={`absolute right-1 mt-1  w-auto min-w-50 bg-gray-200 px-4 py-6 flex flex-col justify-center shadow-xl rounded transform transition-all duration-300 ease-out
-              ${productIsOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
+    <>
+      
+      <header className="flex justify-end bg-[#0A1A2F] text-white shadow-2xl px-6 py-3 fixed top-0 w-full h-20 z-50">
+        <button
+          onClick={() => setIsOpen((isOpen) => !isOpen)}
+          className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
         >
-          <p onClick={() => navigate('/admin/CreateListing')} className=' whitespace-nowrap overflow-hidden font-semibold text-black mt-2 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-95'>Create Product Listing</p>
-          <p className='font-semibold mt-4 cursor-pointer transform transition text-black duration-300 hover:text-blue-500 hover:scale-95' onClick={() => navigate("admin/Products")}>See Product Listings</p>
-        </div>
-      </div>
-
-
-
-      <p  onClick={() => navigate('/admin/Orders')} className="text-lg font-semibold cursor-pointer hover:opacity-75 active:scale-95">Orders</p>
-      <p onClick={() => navigate('/admin/Reviews')} className="text-lg font-semibold cursor-pointer hover:opacity-75 active:scale-95">Reviews</p>
-
-      <div className="relative my-auto">
-        <button onClick={() => { setProfileIsOpen(!profileIsOpen) }}>
-          {profileIsOpen
-            ? <HiOutlineX size={30} />
-            : <FaUser className="hover:opacity-75 text-[25px] cursor-pointer " />}
+          {isOpen ? <HiOutlineX size={26} /> : <HiOutlineMenu size={26} />}
         </button>
-        <div
-          className={`absolute right-0  w-36 bg-gray-200 px-6 py-4 flex flex-col justify-center shadow-xl rounded transform transition-all duration-300 ease-out
-              ${profileIsOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
-        >
-          <p onClick={() => navigate('/home')} className='font-semibold  whitespace-nowrap overflow-hidden text-black mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110'>Ecommerce</p>
-          <p onClick={() => navigate('/admin/Account')} className='font-semibold text-black mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110'>Account</p>
-          <p className='font-semibold mt-4 cursor-pointer transform transition text-black duration-300 hover:text-blue-500 hover:scale-110' onClick={(e) => {
-            e.preventDefault()
-            logOut()
-            }}>Log Out</p>
-        </div>
-      </div>
+      </header>
 
-    </div>
+      
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50  backdrop-blur-sm flex items-start justify-center p-4 sm:p-8"
+          onClick={() => setIsOpen(false)} 
+        >
+          <nav
+            className="w-full max-w-md bg-[#0A1A2F] text-white rounded-lg shadow-2xl p-6 overflow-auto"
+           onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Admin Menu</h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
+              >
+                <HiOutlineX size={22} />
+              </button>
+            </div>
+
+            <ul className="flex flex-col space-y-3">
+              <li>
+                <button
+                  onClick={() => goTo("/admin")}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5"
+                >
+                  Accounts
+                </button>
+              </li>
+
+         
+              <li>
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => setProductIsOpen((s) => !s)}
+                    className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5 flex items-center justify-between"
+                  >
+                    <span>Product Listings</span>
+                    <span className="text-sm opacity-80">{productIsOpen ? "−" : "+"}</span>
+                  </button>
+
+                  {productIsOpen && (
+                    <div className="mt-2 ml-4 flex flex-col space-y-2">
+                      <button
+                        onClick={() => goTo("/admin/CreateListing")}
+                        className="text-sm text-left py-2 px-3 rounded hover:bg-white/5"
+                      >
+                        Create Product Listing
+                      </button>
+                      <button
+                        onClick={() => goTo("/admin/Products")}
+                        className="text-sm text-left py-2 px-3 rounded hover:bg-white/5"
+                      >
+                        See Product Listings
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </li>
+
+        
+              <li>
+                <button
+                  onClick={() => goTo("/admin/Orders")}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5"
+                >
+                  Orders
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => goTo("/admin/Reviews")}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5"
+                >
+                  Reviews
+                </button>
+              </li>
+
+              <hr className="border-gray-700 my-2" />
+
+              
+              <li>
+                <button
+                  onClick={() => goTo("/home")}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5"
+                >
+                  Ecommerce
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => goTo("/admin/Account")}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-white/5"
+                >
+                  Account
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    logOut()
+                  }}
+                  className="w-full text-left font-medium py-2 px-3 rounded hover:bg-red-600 hover:text-white transition"
+                >
+                  Log Out
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
+    </>
   )
 }
 

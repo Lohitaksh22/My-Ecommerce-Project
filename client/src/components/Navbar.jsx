@@ -13,6 +13,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
 
   const handleSubmit = (e) => {
     e?.preventDefault()
@@ -31,10 +32,16 @@ const Navbar = () => {
     }
   }
 
+  const cancel = (path) => {
+    setIsOpen(!isOpen)
+    setProfileIsOpen(!isOpen)
+    navigate(path)
+  }
+
   return (
     <div className='flex bg-[#F5F5F5] shadow-xl px-8 py-4 fixed top-0 w-full justify-between items-center z-40 '>
 
-      <p onClick={() => navigate('/home')} className='flex-none text-[25px] w-32 hover:text-blue-500 cursor-pointer font-bold' >
+      <p onClick={() => cancel('/home')} className='flex-none text-[25px] w-32 hover:text-blue-500 cursor-pointer font-bold' >
         MyShop
       </p>
 
@@ -95,10 +102,10 @@ const Navbar = () => {
       className="hover:text-blue-500 text-[20px] cursor-pointer mt-2"
       size={20}
     />
-    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/account')}>Profile</p>
-    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/orders')}>Orders</p>
-    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={logOut}>LogOut</p>
-    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => navigate('/cart')}>Cart</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => cancel('/account')}>Profile</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => cancel('/orders')}>Orders</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={logOut}>Log Out</p>
+    <p className='font-semibold text-md mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-105' onClick={() => cancel('/cart')}>Cart</p>
   </div>
 }
 

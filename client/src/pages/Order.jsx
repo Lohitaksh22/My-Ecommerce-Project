@@ -6,6 +6,7 @@ import {FaTrash} from "react-icons/fa"
 const Order = () => {
   const api = useInterceptors()
   const [orders, setOrders] = useState([])
+  const [isCancelled, setIsCancelled] = useState(false)
 
   const getOrders = async () => {
     try {
@@ -25,7 +26,7 @@ const Order = () => {
 
   const cancelOrder = async (orderId) => {
     try {
-      await api.patch(`/orders/${orderId}`)
+      await api.patch(`/orders/cancel/${orderId}`)
       await getOrders()
     } catch (err) {
       console.error(err)
@@ -35,10 +36,9 @@ const Order = () => {
   
   const deleteOrder = async (orderId) => {
     try {
-      await api.delete(`/orders/${orderId}`)
-      setOrders(orders.filter(
-        order => String(order._id) != orderId
-      ))
+      const res = await api.delete(`/orders/${orderId}`)
+      console.log(res.data.msg)
+      await getOrders()
   
     } catch (err) {
       console.error(err)
@@ -47,24 +47,26 @@ const Order = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 mt-19 p-4'>
-      <div className='flex flex-col space-y-4'>
+    <div className='min-h-screen bg-gray-100 mt-15 p-4'>
+      <div className='flex flex-col px-2 py-10 max-w-4xl mx-auto w-full'>
 
-        <h2 className='font-bold text-2xl'>Your Orders</h2>
+        <h2 className='font-bold text-2xl mb-4'>Your Orders</h2>
         {orders?.length > 0 ? orders.map(order => (
-          <div key={order._id} className='flex flex-col w-auto min-w-100 bg-white rounded-xl p-6 space-y-2 mx-8'>
-            <p className='font-extrabold cursor-pointer hover:opacity-80'> Tracking Number: {order.trackingNumber}</p>
+          <div key={order._id} className='flex-1 mb-10  w-full px-4 p-8 space-y-2 bg-white rounded-xl p-6 '>
+            <p className='font-extrabold cursor-pointer hover:opacity-80 truncate'> Tracking Number: {order.trackingNumber}</p>
             <p className='font-bold text-yellow-500  cursor-pointer hover:opacity-80'>Order Status: {order.orderStatus}</p>
             
 
             {(order.orderStatus !== "shipped" && order.orderStatus !== "delivered") ? (
               <>
               <p className='font-bold text-green-500  cursor-pointer hover:opacity-80'>Payment Status: {order.paymentStatus}</p>
+               {(order.orderStatus != "canceled") && 
                <button 
               onClick={() => {cancelOrder(order._id)}}
-              className='bg-red-500 w-30 px-2 py-1 rounded-2xl text-white mx-auto hover:opacity-75 active:scale-95'>Cancel</button>
+              className='flex justify-center my-8 bg-red-500 w-30 px-2 py-1 rounded-2xl text-white mx-auto hover:opacity-75 active:scale-95'>Cancel</button>}
+               
               
-              {order.orderStatus === "canceled" &&  <FaTrash className= "mx-auto m-2 hover:text-red-500 active:scale-105" onClick={() => {deleteOrder(order._id)}} />}
+              {order.orderStatus === "canceled" &&  <FaTrash className= "mx-auto my-8 m-2 hover:text-red-500 active:scale-105" onClick={() => {deleteOrder(order._id)}} />}
               </>
 
             ) : (
@@ -75,7 +77,7 @@ const Order = () => {
                 <p className='font-bold bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>
                   Delivery Date: {new Date(order.deliveryTime).toLocaleDateString()}
                 </p>
-                <p className='font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>
+                <p className='mb-4 font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80'>
                   Shipping to: {order.shippingAddress}
                 </p>
               </>

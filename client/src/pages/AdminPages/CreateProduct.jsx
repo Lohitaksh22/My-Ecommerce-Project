@@ -36,8 +36,8 @@ const CreateProduct = () => {
     }
   }
   return (
-    <div className="min-h-screen bg-gray-300 flex items-center justify-center">
-      <form className="mt-30 flex flex-col p-6 space-y-4 text-white bg-[#0A1A2F] w-full max-w-md  h-auto rounded-xl shadow-2xl ">
+    <div className="min-h-screen bg-gray-300 flex items-center justify-center p-4">
+      <form className="mt-30 flex flex-col p-6 space-y-4 text-white bg-[#0A1A2F]  w-full max-w-md h-auto p-8 sm:p-8 rounded-2xl shadow-2xl ">
         <p className="mx-auto font-extrabold text-2xl ">Create Listing</p>
 
         <input onChange={(e) => { setName(e.target.value) }} className=" outline-none m-4 px-2 py-2 border-1 rounded-lg placeholder:text-white focus:bg-gray-300 focus:text-black focus:placeholder-black focus:ring-5  focus:ring-white transition duration-300 " type="text" placeholder="Enter Product Name"></input>

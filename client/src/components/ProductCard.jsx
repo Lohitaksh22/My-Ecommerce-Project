@@ -21,15 +21,15 @@ const ProductCard = ({ _id, name, price, image }) => {
   }
 
   return (
-    <div className="flex rounded-xl flex-col items-center justify-center shadow-lg w-64 h-[400px] bg-gray-100 mb-10">
-      <img onClick={() => navigate(`/product/${_id}`)} src={image} className="w-48 h-48 object-cover rounded-lg active:translate-x-1 active:translate-y-1 active:shadow-inner" alt={name} />
+    <div className="mt-5 flex flex-col items-center justify-center shadow-xl w-full sm:w-70 h-[400px] bg-gray-100 mb-10 rounded-xl">
+      <img onClick={() => navigate(`/product/${_id}`)} src={image} className="w-full h-65 object-cover rounded-xl cursor-pointer active:translate-x-1 active:translate-y-1 active:shadow-inner" alt={name} />
 
       <div className="text-center mt-2">
         <h2 onClick={() => navigate(`/product/${_id}`)} className="text-lg font-semibold line-clamp-2">{name}</h2>
         <h2 className="text-gray-700 mt-1">${price}</h2>
       </div>
 
-
+<div className='mb-8'>
       <div className="flex space-x-4 mt-4 items-center">
         <div className="flex items-center space-x-3">
           <button
@@ -53,6 +53,7 @@ const ProductCard = ({ _id, name, price, image }) => {
         >
           <FaShoppingCart /> Add
         </button>
+        </div>
       </div>
     </div>
   )

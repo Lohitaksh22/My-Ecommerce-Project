@@ -42,8 +42,8 @@ app.post("/create-checkout-session", async (req, res) => {
         quantity: item.quantity,
       })),
 
-      success_url: "https://my-ecommerce-project-react-1.onrender.com/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https://my-ecommerce-project-react-1.onrender.com/cancel",
+      success_url: "https://myshop-by-lohit.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://myshop-by-lohit.vercel.app/cancel",
       metadata: {
         shippingAddress,
         deliveryTime,

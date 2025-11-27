@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+import { api } from "../api"
 
 
 const SignUp = () => {
@@ -20,7 +20,7 @@ const SignUp = () => {
     setLoading(true)
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL ?? "http://localhost:5173"}/account/register`, {
+      const res = await api.post(`${import.meta.env.VITE_API_URL ?? "http://localhost:5173"}/account/register`, {
         username,
         email,
         password,
@@ -56,10 +56,10 @@ const SignUp = () => {
   }
 
   return (
-    <div className="h-screen bg-linear-45 from-green-400 to-purple-400 flex justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-green-400 to-purple-400 flex justify-center items-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md h-auto px-6 py-8 rounded-lg"
+        className='rounded-2xl flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md h-auto p-8 sm:p-8 flex flex-col gap-2'
       >
         <p className="text-2xl font-bold mb-4">Register Here</p>
 

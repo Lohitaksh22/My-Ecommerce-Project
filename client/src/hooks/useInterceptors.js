@@ -8,6 +8,7 @@ const useInterceptors = () => {
   const { accessToken, setAccessToken } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const  baseURL=  "https://my-ecommerce-project-w5lh.onrender.com"
 
   useEffect(() => {
 
@@ -29,7 +30,7 @@ const useInterceptors = () => {
         if (err?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           try{
-          const res = await axios.post('http://localhost:3500/account/refresh', {}, { withCredentials: true });
+          const res = await axios.post(`${baseURL}/account/refresh`, {}, { withCredentials: true });
           setAccessToken(res.data.accessToken);
           prevRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`;
           return api(prevRequest);

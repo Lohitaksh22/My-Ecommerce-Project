@@ -122,12 +122,12 @@ const AdminProducts = () => {
 
 
       </div>
-      <div className="flex flex-wrap gap-6 mt-10 justify-center ">
+      <div className="flex flex flex-wrap gap-6 mt-10 justify-center ">
         {products?.length > 0 ?
           products.map((item) => (
-            <div key={item._id} className="flex flex-col items-center justify-center shadow-xl w-64 h-[400px] bg-gray-100 mb-10 rounded-xl">
+            <div key={item._id} className="flex flex-col items-center justify-center shadow-xl w-full sm:w-80 h-[400px] bg-gray-100 mb-10 rounded-xl">
 
-              <img src={item.image} className="w-48 h-48 object-cover rounded-lg cursor-pointer" alt={item.name} />
+              <img src={item.image} className="w-full h-65 object-cover rounded-xl cursor-pointer" alt={item.name} />
 
               <div className="text-center mt-2">
                 <h2 className="text-lg font-semibold line-clamp-2">{item.name}</h2>
@@ -135,7 +135,7 @@ const AdminProducts = () => {
 
               </div>
 
-              <div className="flex mt-6 space-x-4 text-center w-auto h-auto">
+              <div className="flex mt-4 mb-8 space-x-4 text-center w-auto h-auto">
                 <button onClick={() => {
                   setIsUpdate(!isUpdate) 
                   setSaveId(item._id)}} className="cursor-pointer font-semibold hover:opacity-75  active:scale-75 transition duration-500 text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl px-3 py-1  text-sm items-center">Update</button>

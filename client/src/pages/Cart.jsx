@@ -158,10 +158,14 @@ const Cart = () => {
                 <div className="flex items-center space-x-8">
                   <button onClick={() => saveForLater(item._id)} title="This will move the item to Saved for Later" className="font-semibold hover:opacity-75  active:scale-75 transition duration-500 text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl px-1 py-1 text-lg items-center">+</button>
                   <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                  <p className="font-medium">{item.name}</p>
+                  <p className="font-medium truncate">{item.name}</p>
                 </div>
 
-                <div className="flex items-center space-x-4 mt-4 sm:mt-0">
+               <div
+  className="flex flex-col sm:flex-row items-center justify-end 
+             gap-3 sm:gap-4 mt-4 sm:mt-0 w-full sm:w-auto ml-auto text-right sm:text-left"
+>
+
                   <input
                     type="number"
                     value={item.quantity}
@@ -169,14 +173,20 @@ const Cart = () => {
                     onChange={(e) => updateQuantity(item._id, parseInt(e.target.value))}
                     className="w-16 border rounded text-center"
                   />
-                  <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+
+                  <p className="font-semibold">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+
                   <button
                     onClick={() => removeItem(item._id)}
                     className="text-red-500 hover:text-red-700 active:scale-75 transition duration-500"
                   >
                     <FaTrash />
                   </button>
+
                 </div>
+
               </div>
             ))}
 
@@ -190,7 +200,7 @@ const Cart = () => {
 
                 <div className="flex flex-col space-y-3">
                   <label className="flex items-center space-x-2 cursor-pointer">
-                    <input  onChange={() => setDeliveryTime("oneDay")} className="mr-2" type="radio" name="shipping" value="oneDay" defaultChecked />
+                    <input onChange={() => setDeliveryTime("oneDay")} className="mr-2" type="radio" name="shipping" value="oneDay" defaultChecked />
                     One Day Shipping
                   </label>
 
@@ -209,6 +219,28 @@ const Cart = () => {
                 <div className="flex flex-col">
                   <label className="font-semibold mb-2">Shipping Address:</label>
                   <input
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault()
+                        try {
+                          const res = await api.post("/create-checkout-session", {
+                            items: cart.map(item => ({
+                              name: item.name,
+                              price: item.price,
+                              quantity: item.quantity,
+                            })),
+                            shippingAddress,
+                            deliveryTime
+                          })
+
+                          window.location.href = res.data.url
+                        } catch (err) {
+                          console.error(err)
+                        }
+
+                      }
+                    }}
+
                     onChange={(e) => { setShippingAddress(e.target.value) }}
                     className="w-full px-3 py-2  border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300" type="text" placeholder="Enter Shipping Address"></input>
                 </div>
@@ -216,7 +248,8 @@ const Cart = () => {
                   <p className="font-bold whitespace-nowrap text-xs text-red-500 hover:opacity-75 text-center ">Must Enter Shipping Address To Checkout</p>
                   :
                   <button
-                  type="button"
+                    type="button"
+
                     onClick={async () => {
                       try {
                         const res = await api.post("/create-checkout-session", {
@@ -254,7 +287,7 @@ const Cart = () => {
         <h2 className="text-2xl font-bold mb-6">Saved For Later</h2>
         <div
           onClick={() => clearSaved()}
-          className="ml-2 text-md font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80 active:scale-95 transition duration-300"
+          className="ml-2 mb-4 text-md font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent cursor-pointer hover:opacity-80 active:scale-95 transition duration-300"
         >
           Clear Saved List
         </div>
@@ -270,18 +303,18 @@ const Cart = () => {
               return (
                 <div
                   key={item._id}
-                  className="flex items-center justify-between bg-white p-4 rounded-lg shadow-xl"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-lg shadow-xl space-y-4 sm:space-y-0"
                 >
-                  <div className="flex items-center space-x-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-20 h-20 object-cover rounded-full"
+                      className="w-20 h-20 object-cover rounded-full mx-auto sm:mx-4"
                     />
-                    <p className="font-medium">{product.name}</p>
+                    <p className="font-medium text-center sm:text-left mt-2 sm:mt-0 truncate">{product.name}</p>
                   </div>
 
-                  <div className="flex items-center space-x-4 mt-4 sm:mt-0">
+                  <div className="flex items-center justify-center sm:justify-end space-x-4">
                     <p className="font-semibold">${(product.price * item.quantity).toFixed(2)}</p>
 
                     <button

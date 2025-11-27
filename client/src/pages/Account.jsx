@@ -91,11 +91,12 @@ const Account = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center bg-linear-45 from-blue-400 to-purple-400 min-h-screen">
-      <div className="flex flex-col min-w-120  rounded-2xl hover:shadow-2xl shadow-md px-8 py-10 space-y-4 bg-white w-auto h-100 rounded ">
+    <div className="flex flex-col px-4 items-center justify-center bg-gradient-to-br from-blue-400 to-purple-400 min-h-screen">
+<div className="w-full max-w-lg bg-white shadow-xl rounded-2xl p-6 sm:p-8 space-y-6">
+
         <p className="font-semibold hover:text-blue-500">UserName: </p>
         {isEditing ?
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
             <input className="px-2 py-1 w-75 outline-none border-1 border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300" type="text" value={username} onChange={(e) => {
               setUsername(e.target.value)
             }}></input>
@@ -118,7 +119,7 @@ const Account = () => {
         }
         <p className="font-semibold hover:text-blue-500">Email: </p>
         {isEditingEmail ?
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
             <input className="px-2 py-1 w-75 border-1 outline-none border-blue-500 rounded focus:ring-2 focus:ring-blue-500 transition duration-300" type="text" value={email} onChange={(e) => {
               setEmail(e.target.value)
             }}></input>
@@ -139,11 +140,11 @@ const Account = () => {
           </div> : <p className="cursor-pointer" onClick={() => editingEmail()}>{email}</p>
         }
 
-        <p onClick={() => setIsEditingPassword(!isEditingPassword)} className="mt-auto flex justify-center font-semibold cursor-pointer active:scale-95 hover:text-blue-500 ">Want to Change Password? Click Here</p>
+        <p onClick={() => setIsEditingPassword(!isEditingPassword)} className="mt- flex justify-center font-semibold cursor-pointer active:scale-95 hover:text-blue-500  ">Want to Change Password? Click Here</p>
 
         {isEditingPassword &&
-          <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
-            <div className="flex flex-col space-y-4 px-8 py-8 bg-white w-100 h-auto items-center rounded-lg justify-center">
+          <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm px-8">
+            <div className="flex flex-col space-y-4 px-8 py-8 bg-white w-full h-auto items-center rounded-lg justify-center">
               <p className="font-bold">Enter Current Password: </p>
               <input className="px-2 py-1 w-70 outline-none border border-blue-500 rounded  w-full focus:ring-2 focus:ring-blue-400 transition duration-300" type="password" value={currentPassword} name="account-current-password" autoComplete="current-password" onChange={(e) => setCurrentPassword(e.target.value)}></input>
               <button
@@ -180,7 +181,7 @@ const Account = () => {
                   }
                   <button className="bg-red-500 text-white px-4 text-sm py-1 rounded-2xl hover:opacity-75 active:scale-95" onClick={() => setIsEditingPassword(false)}>Exit</button>
                 </> :
-                <div className="flex flex-col space-y-4 items-center justify-center">
+                <div className="flex flex-col  space-y-4 items-center justify-center">
                   <p className="text-sm font-semibold text-red-500">{passwordCheck}</p>
                   <button className="bg-red-500 text-white px-4 text-sm py-1 rounded-2xl hover:opacity-75 active:scale-95" onClick={() => setIsEditingPassword(false)}>Exit</button>
                 </div>
@@ -188,7 +189,7 @@ const Account = () => {
 
             </div>
           </div>}
-        <p className="mt-auto ml-auto font-semibold hover:text-blue-500">Last-Login: {lastLogin?.toLocaleString()}</p>
+        <p className="flex justify-center mt-8 font-semibold hover:text-blue-500">Last-Login: {lastLogin?.toLocaleString()}</p>
 
       </div>
     </div>
