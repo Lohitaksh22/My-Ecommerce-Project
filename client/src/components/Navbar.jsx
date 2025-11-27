@@ -67,8 +67,8 @@ const Navbar = () => {
             className={`absolute right-0 mt-2 w-36 bg-[#F5F5F5] px-6 py-4 flex flex-col justify-center shadow-xl rounded transform transition-all duration-300 ease-out
         ${profileIsOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
           >
-            <p className='font-semibold cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110' onClick={() => navigate('/orders')}>Orders</p>
-            <p onClick={() => navigate('/account')} className='font-semibold mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110'>Account</p>
+            <p className='font-semibold cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110' onClick={() => cancel('/orders')}>Orders</p>
+            <p onClick={() => cancel('/account')} className='font-semibold mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110'>Account</p>
             <p className='font-semibold mt-4 cursor-pointer transform transition duration-300 hover:text-blue-500 hover:scale-110' onClick={logOut}>Log Out</p>
           </div>
         </div>
