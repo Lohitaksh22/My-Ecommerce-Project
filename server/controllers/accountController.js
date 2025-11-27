@@ -65,7 +65,7 @@ const loginAccount = async (req, res) => {
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: "/",
       maxAge: 24 * 60 * 60 * 1000
     });
@@ -92,7 +92,7 @@ const logoutAccount = async (req, res) => {
     foundAccount.refreshToken = '';
     await foundAccount.save();
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     res.sendStatus(204);
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
