@@ -15,7 +15,7 @@ const Success = () => {
   const createOrder = async () => {
     try {
       setIsLoading(true)
-      const res1 = await api.get(`/checkout-session?session_id=${sessionId}`)
+      const res1 = await api.get(`/checkout-session?sessionId=${sessionId}`)
       const res = await api.post('/orders/', {
         sessionId: sessionId,
         shippingAddress: res1.data.metadata.shippingAddress,
