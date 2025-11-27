@@ -148,8 +148,8 @@ const AdminProducts = () => {
           : <p className="mt-20 mx-auto text-lg ">No Products Found</p>}
       </div>
 
-      {isUpdate && (<div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
-        <div className="z-50 rounded-xl flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md p-6">
+      {isUpdate && (<div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm p-6">
+        <div className="z-50 mt-20 rounded-xl flex flex-col items-center space-y-4 bg-[#F5F5F5] shadow-2xl w-full max-w-md p-6 ">
           <button
             onClick={() => setIsUpdate(false)}
             className="relative bottom-4 right-50  hover:text-gray-800 text-xl font-bold"
