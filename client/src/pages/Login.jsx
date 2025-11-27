@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { api } from '../api'
+import useInterceptors from '../hooks/useInterceptors'
 import { useAuth } from '../hooks/AuthContext'
 
 
@@ -12,6 +12,7 @@ const Login = () => {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const api = useInterceptors()
 
     const { setAccessToken } = useAuth()
 
