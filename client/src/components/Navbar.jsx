@@ -3,7 +3,7 @@ import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi"
 import { useState } from 'react'
 import { useNavigate} from 'react-router-dom'
-import axios from 'axios'
+import useInterceptors from '../hooks/useInterceptors'
 import FilterProducts from './FilterProducts'
 
 
@@ -13,7 +13,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
-  const [showFilters, setShowFilters] = useState(false)
+    const api = useInterceptors()
 
   const handleSubmit = (e) => {
     e?.preventDefault()
@@ -25,7 +25,7 @@ const Navbar = () => {
     e.preventDefault()
 
      try{
-      await axios.post("http://localhost:3500/account/logout" , {}, { withCredentials: true })
+      await api.post("/account/logout" , {}, { withCredentials: true })
       navigate('/login')
     }catch(err){
       console.error(err)
