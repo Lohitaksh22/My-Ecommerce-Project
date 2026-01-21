@@ -30,6 +30,13 @@ The application is deployed on Vercel:
 https://my-ecommerce-project-psi.vercel.app
 > Note: The server may take a minute to respond on first load due to cold start behavior.
 
+## Demo Account
+Email: TestUser1@gmail.com
+UserName: TestUser1  
+Password: Password#1  
+
+Use this account to quickly test authentication and other ecommerce website.
+
 ## Project Purpose
 
 This project was built to practice full-stack development concepts, including API design, payment integration, admin workflows, and background job processing.
