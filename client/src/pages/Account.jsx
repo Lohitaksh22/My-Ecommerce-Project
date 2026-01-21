@@ -144,7 +144,7 @@ const Account = () => {
 
         {isEditingPassword &&
           <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm px-8">
-            <div className="flex flex-col space-y-4 px-8 py-8 bg-white w-full h-auto items-center rounded-lg justify-center">
+            <div className="flex flex-col space-y-4 px-8 py-8 bg-white  h-auto items-center rounded-lg justify-center">
               <p className="font-bold">Enter Current Password: </p>
               <input className="px-2 py-1  outline-none border border-blue-500 rounded  w-full focus:ring-2 focus:ring-blue-400 transition duration-300" type="password" value={currentPassword} name="account-current-password" autoComplete="current-password" onChange={(e) => setCurrentPassword(e.target.value)}></input>
               <button
